@@ -12,6 +12,7 @@ project tut-framework
 	  <toolset>msvc-7.1:<asynch-exceptions>off
 	  <toolset>msvc-8.0express:<asynch-exceptions>on
 	  <toolset>msvc-8.0express:<asynch-exceptions>on
+	  <toolset>msvc-8.0express:<asynch-exceptions>on
 	  <threading>single 
 	: default-build
 	  release
