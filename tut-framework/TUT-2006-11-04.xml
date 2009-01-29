@@ -2,7 +2,7 @@
 <changes>
 
 <p>
-Fix: lost changes from version TUT-2006-03-29 are restored.
+Fix: lost changes from version <b>TUT-2006-03-29</b> are restored.
 </p>
 <p>
 Fix: errors appeared while compiling restartable example are fixed. 
