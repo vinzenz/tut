@@ -3,7 +3,8 @@ OBJS=main$(OFX) runner$(OFX) setup_ex$(OFX) setup_new_copy$(OFX) \
      teardown_ex$(OFX) callback$(OFX) ensure$(OFX) fail$(OFX) \
      ensure_equals$(OFX) ensure_distance$(OFX) runtime_exceptions$(OFX) \
      more_than_50$(OFX) less_than_50$(OFX) same_object_for_dummy$(OFX) \
-     reporter$(OFX) outside$(OFX) ctor_ex$(OFX)
+     reporter$(OFX) outside$(OFX) ctor_ex$(OFX) constructed_instances$(OFX) \
+     bug_ensure_0_equals_0$(OFX)
 
 all: $(TGT)
 
@@ -63,3 +64,9 @@ same_object_for_dummy$(OFX) : same_object_for_dummy.cpp ../tut.h
 
 outside$(OFX) : outside.cpp ../tut.h
 	$(CXX) $(CXXOPTS)outside$(OFX) outside.cpp 
+
+constructed_instances$(OFX) : constructed_instances.cpp ../tut.h
+	$(CXX) $(CXXOPTS)constructed_instances$(OFX) constructed_instances.cpp 
+
+bug_ensure_0_equals_0$(OFX) : bug_ensure_0_equals_0.cpp ../tut.h
+	$(CXX) $(CXXOPTS)bug_ensure_0_equals_0$(OFX) bug_ensure_0_equals_0.cpp 

@@ -1,5 +1,7 @@
 #include <tut.h>
 
+#include <iostream>
+
 namespace tut
 {
   /**
@@ -49,7 +51,7 @@ namespace tut
   tg less_than_50("less than default 50 tests");
 
   /**
-   * Checks running all (and not call 3rd test) and then only 1th.
+   * Checks running all (and do not call 3rd test) and then only 1th.
    */
   template<>
   template<>
