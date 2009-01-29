@@ -6,7 +6,6 @@
 using std::string;
 using std::ostringstream;
 using std::runtime_error;
-using std::logic_error;
 
 
 namespace tut
@@ -51,7 +50,7 @@ namespace tut
       // we cannot relay on fail here; we haven't tested it yet ;)
       throw runtime_error("passed below");
     }
-    catch (const logic_error& ex)
+    catch (const failure& ex)
     {
       string msg = ex.what();
       if(msg.find("ENSURE") == string::npos )
@@ -65,7 +64,7 @@ namespace tut
       ensure(1 == 2);
       throw runtime_error("passed below");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
   }
