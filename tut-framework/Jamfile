@@ -1,5 +1,21 @@
 using testing ;
 
+SOURCE_DIR = selftest ;
+BUILD_DIR = bin ;
+
+project tut-framework 
+    : source-location
+	  $(SOURCE_DIR)
+	: requirements 
+	  <include>. 
+	  <toolset>msvc:<define>TUT_USE_SEH
+	  <threading>single 
+	: default-build
+	  release
+	: build-dir
+	  $(BUILD_DIR)
+	;
+
 SOURCES = main.cpp
          runner.cpp
          setup_ex.cpp
@@ -21,4 +37,4 @@ SOURCES = main.cpp
          bug_ensure_0_equals_0.cpp
          set_test_name.cpp ;
 
-run selftest/$(SOURCES) : : : <include>. <toolset>msvc:<define>TUT_USE_SEH : selftest ;
+run $(SOURCES) : : : : selftest ;

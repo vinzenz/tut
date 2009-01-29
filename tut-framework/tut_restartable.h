@@ -328,7 +328,7 @@ namespace tut
       else
       {
         // test was terminated...
-        tut::test_result tr(fail_group,fail_test,tut::test_result::term);
+        tut::test_result tr(fail_group,fail_test, "", tut::test_result::term);
         register_test_(tr);
       }
     }
