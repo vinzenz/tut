@@ -16,11 +16,11 @@ namespace tut
     tut::test_result tr5;
 
     reporter_test() :
-      tr1("foo",1,tut::test_result::ok),
-      tr2("foo",2,tut::test_result::fail),
-      tr3("foo",3,tut::test_result::ex),
-      tr4("foo",4,tut::test_result::warn),
-      tr5("foo",5,tut::test_result::term)
+      tr1("foo",1,"",tut::test_result::ok),
+      tr2("foo",2,"",tut::test_result::fail),
+      tr3("foo",3,"",tut::test_result::ex),
+      tr4("foo",4,"",tut::test_result::warn),
+      tr5("foo",5,"",tut::test_result::term)
     {
     }
   };

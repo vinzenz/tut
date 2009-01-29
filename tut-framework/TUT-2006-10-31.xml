@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<changes>
+	Jamfile added to build TUT Framework using
+	<a href="http://boost.sourceforge.net/boost-build2/">Boost Build System V2.</a>
+	It builds and automatically executes TUT selftest. If build is successfull the TUT version is correct. Further enchancements will coming soon.
+
+	New functionality added: at now TUT users can optionally specify a test name inside the test.
+<pre>
+    template &lt;&nbsp;&gt; template &lt;&nbsp;&gt; 
+    void my_object_tests::test &lt; 1 &gt; () 
+    { 
+        // specify test name set_test_name("test basic scenario"); 
+        // test code 
+        // ... 
+    }</pre>
+	If test fails and the test name was specified as above, the test name will appear in the test report, i.e.:
+<pre>
+    ---&gt; group: my_object, test: test&lt;1&gt; : test basic scenario 
+         problem: assertion failed 
+	     failed assertion: "not implemented"</pre>
+	
+	Also if you write your own custom reporter you can retrieve a test name from <code>tut::test_result::name</code> member.
+
+	Minor fix: TUT selftest doesn't return 0 longer if there were failed tests.
+</changes>

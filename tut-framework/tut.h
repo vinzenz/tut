@@ -115,6 +115,11 @@ namespace tut
     int test;
     
     /**
+     * Test name (optional)
+     */
+    std::string name;
+    
+    /**
      * ok - test finished successfully
      * fail - test failed with ensure() or fail() methods
      * ex - test throwed an exceptions
@@ -141,18 +146,19 @@ namespace tut
     /**
      * Constructor.
      */
-    test_result( const std::string& grp,int pos,result_type res)
-      : group(grp),test(pos),result(res)
+    test_result(const std::string& grp, int pos, 
+    	const std::string& test_name, result_type res)
+      : group(grp), test(pos), name(test_name), result(res)
     {
     }
 
     /**
      * Constructor with exception.
      */
-    test_result( const std::string& grp,int pos,
-                 result_type res,
-                 const std::exception& ex)
-      : group(grp),test(pos),result(res),
+    test_result(const std::string& grp,int pos, 
+    	const std::string& test_name, result_type res,
+        const std::exception& ex)
+      : group(grp), test(pos), name(test_name), result(res),
         message(ex.what()),exception_typeid(typeid(ex).name())
     {
     }
@@ -425,6 +431,16 @@ namespace tut
      * TODO: replace with throwing special exception from default test.
      */
     bool called_method_was_a_dummy_test_;
+    
+    void set_test_name(const std::string& current_test_name)
+    {
+    	current_test_name_ = current_test_name; 
+    }
+    
+    const std::string& get_test_name() const
+    {
+    	return current_test_name_;
+    }
 
     /**
      * Default do-nothing test.
@@ -434,6 +450,10 @@ namespace tut
     {
       called_method_was_a_dummy_test_ = true;
     }
+    
+    private:
+    
+    	std::string current_test_name_;
   };
 
   namespace 
@@ -753,9 +773,10 @@ namespace tut
      */
     test_result run_test_(const tests_iterator& ti,safe_holder<object>& obj)
     {
+	  std::string current_test_name;
       try
       {
-        if( run_test_seh_(ti->second,obj) == false )
+        if( run_test_seh_(ti->second,obj,current_test_name) == false )
           throw seh("seh");
       }
       catch(const no_such_test&)
@@ -765,49 +786,55 @@ namespace tut
       catch(const warning& ex)
       {
         // test ok, but destructor failed
-        test_result tr(name_,ti->first,test_result::warn,ex);
+		  if (obj.get()) current_test_name = obj->get_test_name();
+        test_result tr(name_,ti->first, current_test_name, test_result::warn,ex);
         return tr;
       }
       catch(const failure& ex)
       {
         // test failed because of ensure() or similar method
-        test_result tr(name_,ti->first,test_result::fail,ex);
+		  if (obj.get()) current_test_name = obj->get_test_name();
+        test_result tr(name_,ti->first, current_test_name, test_result::fail,ex);
         return tr;
       }
       catch(const seh& ex)
       {
         // test failed with sigsegv, divide by zero, etc
-        test_result tr(name_,ti->first,test_result::term,ex);
+		  if (obj.get()) current_test_name = obj->get_test_name();
+        test_result tr(name_,ti->first, current_test_name, test_result::term,ex);
         return tr;
       }
       catch(const bad_ctor& ex)
       {
         // test failed because test ctor failed; stop the whole group
-        test_result tr(name_,ti->first,test_result::ex_ctor,ex);
+		  if (obj.get()) current_test_name = obj->get_test_name();
+        test_result tr(name_,ti->first, current_test_name, test_result::ex_ctor,ex);
         return tr;
       }
       catch(const std::exception& ex)
       {
         // test failed with std::exception
-        test_result tr(name_,ti->first,test_result::ex,ex);
+		  if (obj.get()) current_test_name = obj->get_test_name();
+        test_result tr(name_,ti->first, current_test_name, test_result::ex,ex);
         return tr;
       }
       catch(...)
       {
         // test failed with unknown exception
-        test_result tr(name_,ti->first,test_result::ex);
+		  if (obj.get()) current_test_name = obj->get_test_name();
+        test_result tr(name_,ti->first, current_test_name, test_result::ex);
         return tr;
       }
 
       // test passed
-      test_result tr(name_,ti->first,test_result::ok);
+      test_result tr(name_,ti->first, current_test_name, test_result::ok);
       return tr;
     }
 
     /**
      * Runs one under SEH if platform supports it.
      */
-    bool run_test_seh_(testmethod tm,safe_holder<object>& obj)
+	bool run_test_seh_(testmethod tm,safe_holder<object>& obj, std::string& current_test_name)
     {
 #if defined(TUT_USE_SEH)
       __try
@@ -829,6 +856,7 @@ namespace tut
         __except(handle_seh_(::GetExceptionCode()))
         {
           // throw seh("SEH");
+			current_test_name = obj->get_test_name();
           return false;
         }
 #endif
@@ -839,6 +867,7 @@ namespace tut
           throw no_such_test();
         }
 
+		current_test_name = obj->get_test_name();
         obj.permit_throw();
         obj.release();
 #if defined(TUT_USE_SEH)

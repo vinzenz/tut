@@ -113,7 +113,10 @@ namespace tut
 
            os << std::endl;
 
-           os << "---> " << "group: " << tr.group << ", test: test<" << tr.test << ">" << std::endl;
+           os << "---> " << "group: " << tr.group 
+           	<< ", test: test<" << tr.test << ">" 
+           	<< (!tr.name.empty() ? (std::string(" : ") + tr.name) : "")
+           	<< std::endl;
 
            os << "     problem: ";
            switch(tr.result)
