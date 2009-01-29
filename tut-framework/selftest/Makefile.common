@@ -1,0 +1,75 @@
+TGT=selftest$(SFX)
+OBJS=main$(OFX) runner$(OFX) setup_ex$(OFX) setup_new_copy$(OFX) \
+     teardown_ex$(OFX) callback$(OFX) ensure$(OFX) fail$(OFX) \
+     ensure_equals$(OFX) ensure_distance$(OFX) runtime_exceptions$(OFX) \
+     more_than_50$(OFX) less_than_50$(OFX) same_object_for_dummy$(OFX) \
+     reporter$(OFX) outside$(OFX) ctor_ex$(OFX) constructed_instances$(OFX) \
+     bug_ensure_0_equals_0$(OFX) set_test_name$(OFX)
+
+all: $(TGT)
+
+clean: 
+	$(RM) $(OBJS) $(TGT) *.tds
+
+$(TGT): $(OBJS)
+	$(LNK) $(LNKOPTS)$(TGT) $(OBJS) 
+
+runner$(OFX) : runner.cpp ../tut.h
+	$(CXX) $(CXXOPTS)runner$(OFX) runner.cpp 
+
+reporter$(OFX) : reporter.cpp ../tut.h
+	$(CXX) $(CXXOPTS)reporter$(OFX) reporter.cpp 
+
+setup_ex$(OFX) : setup_ex.cpp ../tut.h
+	$(CXX) $(CXXOPTS)setup_ex$(OFX) setup_ex.cpp 
+
+teardown_ex$(OFX) : teardown_ex.cpp ../tut.h
+	$(CXX) $(CXXOPTS)teardown_ex$(OFX) teardown_ex.cpp 
+
+setup_new_copy$(OFX) : setup_new_copy.cpp ../tut.h
+	$(CXX) $(CXXOPTS)setup_new_copy$(OFX) setup_new_copy.cpp 
+
+callback$(OFX) : callback.cpp ../tut.h
+	$(CXX) $(CXXOPTS)callback$(OFX) callback.cpp 
+
+ensure$(OFX) : ensure.cpp ../tut.h
+	$(CXX) $(CXXOPTS)ensure$(OFX) ensure.cpp 
+
+ensure_equals$(OFX) : ensure_equals.cpp ../tut.h
+	$(CXX) $(CXXOPTS)ensure_equals$(OFX) ensure_equals.cpp 
+
+ensure_distance$(OFX) : ensure_distance.cpp ../tut.h
+	$(CXX) $(CXXOPTS)ensure_distance$(OFX) ensure_distance.cpp 
+
+fail$(OFX) : fail.cpp ../tut.h
+	$(CXX) $(CXXOPTS)fail$(OFX) fail.cpp 
+
+ctor_ex$(OFX) : ctor_ex.cpp ../tut.h
+	$(CXX) $(CXXOPTS)ctor_ex$(OFX) ctor_ex.cpp 
+
+runtime_exceptions$(OFX) : runtime_exceptions.cpp ../tut.h
+	$(CXX) $(CXXOPTS)runtime_exceptions$(OFX) runtime_exceptions.cpp 
+
+main$(OFX) : main.cpp  ../tut.h
+	$(CXX) $(CXXOPTS)main$(OFX) main.cpp
+
+more_than_50$(OFX) : more_than_50.cpp ../tut.h
+	$(CXX) $(CXXOPTS)more_than_50$(OFX) more_than_50.cpp 
+
+less_than_50$(OFX) : less_than_50.cpp ../tut.h
+	$(CXX) $(CXXOPTS)less_than_50$(OFX) less_than_50.cpp 
+
+same_object_for_dummy$(OFX) : same_object_for_dummy.cpp ../tut.h
+	$(CXX) $(CXXOPTS)same_object_for_dummy$(OFX) same_object_for_dummy.cpp 
+
+outside$(OFX) : outside.cpp ../tut.h
+	$(CXX) $(CXXOPTS)outside$(OFX) outside.cpp 
+
+constructed_instances$(OFX) : constructed_instances.cpp ../tut.h
+	$(CXX) $(CXXOPTS)constructed_instances$(OFX) constructed_instances.cpp 
+
+bug_ensure_0_equals_0$(OFX) : bug_ensure_0_equals_0.cpp ../tut.h
+	$(CXX) $(CXXOPTS)bug_ensure_0_equals_0$(OFX) bug_ensure_0_equals_0.cpp 
+
+set_test_name$(OFX) : set_test_name.cpp ../tut.h
+	$(CXX) $(CXXOPTS)set_test_name$(OFX) set_test_name.cpp 
