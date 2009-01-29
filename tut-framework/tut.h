@@ -18,7 +18,7 @@
  * Template Unit Tests Framework for C++.
  * http://tut.dozen.ru
  *
- * @author dozen, tut@dozen.ru
+ * @author Vladimir Dyuzhev, Vladimir.Dyuzhev@gmail.com
  */
 namespace tut
 {
