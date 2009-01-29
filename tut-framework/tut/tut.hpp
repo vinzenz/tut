@@ -1,3 +1,5 @@
+#ifndef TUT_H_GUARD
+#define TUT_H_GUARD
 
 #include <iostream>
 #include <map>
@@ -54,6 +56,10 @@ struct no_such_test : public tut_error
         : tut_error("no such test")
     {
     }
+    
+    ~no_such_test() throw()
+    {
+    }
 };
 
 /**
@@ -64,6 +70,10 @@ struct no_such_test : public tut_error
 struct beyond_last_test : public no_such_test
 {
     beyond_last_test()
+    {
+    }
+    
+    ~beyond_last_test() throw()
     {
     }
 };
@@ -77,6 +87,10 @@ struct no_such_group : public tut_error
         : tut_error(grp)
     {
     }
+    
+    ~no_such_group() throw()
+    {
+    }
 };
 
 /**
@@ -86,6 +100,10 @@ struct no_such_group : public tut_error
 struct no_more_tests
 {
     no_more_tests()
+    {
+    }
+    
+    ~no_more_tests() throw()
     {
     }
 };
@@ -100,6 +118,10 @@ struct bad_ctor : public tut_error
         : tut_error(msg)
     {
     }
+    
+    ~bad_ctor() throw()
+    {
+    }
 };
 
 /**
@@ -109,6 +131,10 @@ struct failure : public tut_error
 {
     failure(const std::string& msg) 
         : tut_error(msg)
+    {
+    }
+    
+    ~failure() throw()
     {
     }
 };
@@ -122,6 +148,10 @@ struct warning : public tut_error
         : tut_error(msg)
     {
     }
+    
+    ~warning() throw()
+    {
+    }
 };
 
 /**
@@ -131,6 +161,10 @@ struct seh : public tut_error
 {
     seh(const std::string& msg) 
         : tut_error(msg)
+    {
+    }
+    
+    ~seh() throw()
     {
     }
 };
@@ -1037,7 +1071,8 @@ private:
     /**
      * Runs one under SEH if platform supports it.
      */
-	bool run_test_seh_(testmethod tm,safe_holder<object>& obj, std::string& current_test_name)
+    bool run_test_seh_(testmethod tm, safe_holder<object>& obj, 
+        std::string& current_test_name)
     {
 #if defined(TUT_USE_SEH)
         __try
