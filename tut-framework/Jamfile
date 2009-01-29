@@ -36,6 +36,8 @@ SOURCES = main.cpp
          ctor_ex.cpp 
          constructed_instances.cpp
          bug_ensure_0_equals_0.cpp
-         set_test_name.cpp ;
+         set_test_name.cpp
+         ensure_not.cpp
+	;
 
 run $(SOURCES) : : : : selftest ;

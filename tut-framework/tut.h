@@ -556,6 +556,15 @@ void ensure(bool cond)
 
 /**
  * Tests provided condition.
+ * Throws if true.
+ */
+void ensure_not(bool cond)
+{
+    ensure(!cond);
+}
+
+/**
+ * Tests provided condition.
  * Throws if false.
  */
 template <typename T>
@@ -565,6 +574,16 @@ void ensure(const T msg, bool cond)
     {
         throw failure(msg);
     }
+}
+
+/**
+ * Tests provided condition.
+ * Throws if true.
+ */
+template <typename T>
+void ensure_not(const T msg, bool cond)
+{
+    ensure(msg, !cond);
 }
 
 /**
@@ -582,10 +601,11 @@ void ensure_equals(const char* msg, const Q& actual, const T& expected)
         std::stringstream ss;
         ss << (msg ? msg : "") 
             << (msg ? ":" : "") 
-            << " expected " 
+            << " expected '" 
             << expected 
-            << " actual " 
-            << actual;
+            << "' actual '" 
+            << actual
+            << '\'';
         throw failure(ss.str().c_str());
     }
 }
@@ -614,12 +634,13 @@ void ensure_distance(const char* msg, const T& actual, const T& expected,
         std::stringstream ss;
         ss << (msg ? msg : "") 
             << (msg? ":" : "") 
-            << "expected [" 
+            << " expected (" 
             << expected-distance 
-            << ";"
+            << " - "
             << expected+distance 
-            << "] actual " 
-            << actual;
+            << ") actual '" 
+            << actual
+            << '\'';
         throw failure(ss.str().c_str());
     }
 }
