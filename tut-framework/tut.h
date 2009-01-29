@@ -200,10 +200,22 @@ namespace tut
     virtual void run_started(){};
 
     /**
+     * Called when a group started
+     * @param name Name of the group
+     */
+    virtual void group_started(const std::string& /*name*/){};
+
+    /**
      * Called when a test finished.
      * @param tr Test results.
      */
     virtual void test_completed(const test_result& /*tr*/){};
+
+    /**
+     * Called when a group is completed
+     * @param name Name of the group
+     */
+    virtual void group_completed(const std::string& /*name*/){};
 
     /**
      * Called when all tests in run completed.
@@ -304,13 +316,14 @@ namespace tut
       const_iterator e = groups_.end();
       while( i != e )
       {
+        callback_->group_started(i->first);
         try
         {
           run_all_tests_in_group_(i);
         }
         catch( const no_more_tests& )
         {
-          // ok
+          callback_->group_completed(i->first);
         }
 
         ++i;
@@ -329,9 +342,11 @@ namespace tut
       const_iterator i = groups_.find(group_name);
       if( i == groups_.end() )
       {
+        callback_->run_completed();
         throw no_such_group(group_name);
       }
 
+      callback_->group_started(group_name);
       try
       {
         run_all_tests_in_group_(i);
@@ -341,6 +356,7 @@ namespace tut
         // ok
       }
 
+      callback_->group_completed(group_name);
       callback_->run_completed();
     }
 
@@ -354,23 +370,28 @@ namespace tut
       const_iterator i = groups_.find(group_name);
       if( i == groups_.end() )
       {
+        callback_->run_completed();
         throw no_such_group(group_name);
       }
 
+      callback_->group_started(group_name);
       try
       {
         test_result tr = i->second->run_test(n);
         callback_->test_completed(tr);
+        callback_->group_completed(group_name);
         callback_->run_completed();
         return tr;
       }
       catch( const beyond_last_test& )
       {
+        callback_->group_completed(group_name);
         callback_->run_completed();
         throw;
       }      
       catch( const no_such_test& )
       {
+        callback_->group_completed(group_name);
         callback_->run_completed();
         throw;
       }

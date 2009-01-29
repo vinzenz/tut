@@ -20,22 +20,42 @@ namespace tut
     tf factory;
     tf factory2;
 
+    typedef enum { RUN_STARTED=100,GROUP_STARTED,GROUP_COMPLETED,TEST_COMPLETED,RUN_COMPLETED } event;
+
     struct chk_callback : public tut::callback
     {
       callback_test& ct;
       chk_callback(callback_test& c) : ct(c){};
 
-      void run_started(){ ct.called.push_back(1); };
+      void run_started(){ ct.called.push_back(RUN_STARTED); };
+
+      void group_started(const std::string& name)
+      { 
+        ct.called.push_back(GROUP_STARTED); 
+	ct.grps.push_back(name);
+      };
+
+      void group_completed(const std::string& name)
+      { 
+	if( ct.grps.size() == 0 ) throw std::runtime_error("group_completed: groups empty");
+        std::string current_group = ct.grps[ct.grps.size()-1];
+	if( name != current_group ) throw std::runtime_error("group_completed: group mismatch:"+name+" vs "+current_group);
+        ct.called.push_back(GROUP_COMPLETED); 
+	ct.grps.push_back(name+".completed");
+      };
+
       void test_completed(const tut::test_result& tr)
       { 
-        if( ct.grps.size() == 0 || tr.group != ct.grps[ct.grps.size()-1] )
-        {
-          ct.grps.push_back(tr.group);
-        }
-
-        ct.called.push_back(3); ct.msg = tr.message; 
+	if( ct.grps.size() == 0 ) throw std::runtime_error("test_completed: groups empty");
+        std::string current_group = ct.grps[ct.grps.size()-1];
+	if( tr.group != current_group ) throw std::runtime_error("test_completed: group mismatch:"+tr.group+" vs "+current_group);
+        ct.called.push_back(TEST_COMPLETED); ct.msg = tr.message; 
       };
-      void run_completed(){ ct.called.push_back(4); };
+
+      void run_completed()
+      { 
+        ct.called.push_back(RUN_COMPLETED); 
+      };
     } callback;
 
     callback_test();
@@ -71,7 +91,7 @@ namespace tut
   tf callback_test("callback");
 
   /**
-   * Checks running OK test
+   * running one test which finished ok
    */
   template<>
   template<>
@@ -79,16 +99,19 @@ namespace tut
   {
     tr.set_callback(&callback);
     tr.run_test("internal",1);
-    ensure_equals("size",called.size(),3U);
-    ensure("1",called[0]==1);
-    ensure("3",called[1]==3);
-    ensure("4",called[2]==4);
+    ensure_equals("size",called.size(),5U);
+    ensure_equals("0",called[0],RUN_STARTED);
+    ensure_equals("1",called[1],GROUP_STARTED);
+    ensure_equals("2",called[2],TEST_COMPLETED);
+    ensure_equals("4",called[3],GROUP_COMPLETED);
+    ensure_equals("5",called[4],RUN_COMPLETED);
     ensure_equals("msg",msg,"");
     ensure_equals("grp",grps[0],"internal");
+    ensure_equals("grp",grps[1],"internal.completed");
   }
 
   /**
-   * Checks running test throwing exception
+   * running one test throwing exception
    */
   template<>
   template<>
@@ -96,33 +119,116 @@ namespace tut
   {
     tr.set_callback(&callback);
     tr.run_test("internal",3);
-    ensure_equals("size",called.size(),3U);
-    ensure("1",called[0]==1);
-    ensure("3",called[1]==3);
-    ensure("4",called[2]==4);
+    ensure_equals("size",called.size(),5U);
+    ensure(called[0]==RUN_STARTED);
+    ensure(called[1]==GROUP_STARTED);
+    ensure(called[2]==TEST_COMPLETED);
+    ensure(called[3]==GROUP_COMPLETED);
+    ensure(called[4]==RUN_COMPLETED);
     ensure_equals("msg",msg,"an error");
     ensure_equals("grp",grps[0],"internal");
+    ensure_equals("grp",grps[1],"internal.completed");
   }
 
   /**
-   * Checks running all tests.
+   * running all tests in one group
    */
   template<>
   template<>
   void object::test<3>()
   {
     tr.set_callback(&callback);
+    tr.run_tests("internal");
+    // ensure_equals("size",called.size(),6U);
+    ensure_equals("0",called[0],RUN_STARTED);
+    ensure_equals("1",called[1],GROUP_STARTED);
+    ensure_equals("2",called[2],TEST_COMPLETED);
+    ensure_equals("3",called[3],TEST_COMPLETED);
+    ensure_equals("4",called[4],GROUP_COMPLETED);
+    ensure_equals("5",called[5],RUN_COMPLETED);
+    ensure_equals("msg",msg,"an error");
+    ensure_equals("grp[0]",grps[0],"internal");
+    ensure_equals("grp[1]",grps[1],"internal.completed");
+  }
+
+  /**
+   * running all tests in non-existing group
+   */
+  template<>
+  template<>
+  void object::test<4>()
+  {
+    tr.set_callback(&callback);
+    try 
+    {
+    	tr.run_tests("ooops!");
+	fail("gotta throw an exception");
+    } 
+    catch( const no_such_group& ex )
+    {
+    }
+
+    // ensure_equals("size",called.size(),2U);
+    ensure_equals("0",called[0],RUN_STARTED);
+    ensure_equals("1",called[1],RUN_COMPLETED);
+  }
+
+
+  /**
+   * running all tests in all groups
+   */
+  template<>
+  template<>
+  void object::test<5>()
+  {
+    tr.set_callback(&callback);
     tr.run_tests();
-    ensure_equals("size",called.size(),6U);
-    ensure("1",called[0]==1);
-    ensure("3",called[1]==3);
-    ensure("4",called[2]==3);
-    ensure("6",called[3]==3);
-    ensure("7",called[4]==3);
-    ensure("8",called[5]==4);
+    // ensure_equals("size",called.size(),10U);
+    ensure_equals("0",called[0],RUN_STARTED);
+    ensure_equals("1",called[1],GROUP_STARTED);
+    ensure_equals("2",called[2],TEST_COMPLETED);
+    ensure_equals("3",called[3],TEST_COMPLETED);
+    ensure_equals("4",called[4],GROUP_COMPLETED);
+    ensure_equals("5",called[5],GROUP_STARTED);
+    ensure_equals("6",called[6],TEST_COMPLETED);
+    ensure_equals("7",called[7],TEST_COMPLETED);
+    ensure_equals("8",called[8],GROUP_COMPLETED);
+    ensure_equals("9",called[9],RUN_COMPLETED);
     ensure_equals("msg",msg,"an error");
     ensure_equals("grp[0]",grps[0],"0copy");
-    ensure_equals("grp[1]",grps[1],"internal");
+    ensure_equals("grp[1]",grps[1],"0copy.completed");
+    ensure_equals("grp[2]",grps[2],"internal");
+    ensure_equals("grp[3]",grps[3],"internal.completed");
   }
+
+  /**
+   * running one test which doesn't exist
+   */
+  template<>
+  template<>
+  void object::test<6>()
+  {
+    tr.set_callback(&callback);
+
+    try 
+    {
+      tr.run_test("internal",100);
+      fail();
+    }
+    catch( const std::exception& ex )
+    {
+    }
+
+    ensure_equals("size",called.size(),4U);
+    ensure_equals("0",called[0],RUN_STARTED);
+    ensure_equals("1",called[1],GROUP_STARTED);
+    ensure_equals("2",called[2],GROUP_COMPLETED);
+    ensure_equals("3",called[3],RUN_COMPLETED);
+    ensure_equals("msg",msg,"");
+    ensure_equals("grp",grps[0],"internal");
+    ensure_equals("grp",grps[1],"internal.completed");
+  }
+
+
 }
 
