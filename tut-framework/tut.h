@@ -994,7 +994,8 @@ private:
     /**
      * Runs one under SEH if platform supports it.
      */
-	bool run_test_seh_(testmethod tm,safe_holder<object>& obj, std::string& current_test_name)
+    bool run_test_seh_(testmethod tm, safe_holder<object>& obj, 
+        std::string& current_test_name)
     {
 #if defined(TUT_USE_SEH)
         __try
