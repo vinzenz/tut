@@ -4,6 +4,7 @@
 #include "tut.h"
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 /**
  * Template Unit Tests Framework for C++.

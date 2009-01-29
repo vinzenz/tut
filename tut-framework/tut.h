@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <stdexcept>
 #include <typeinfo>
 
 #if defined(TUT_USE_SEH)
@@ -22,14 +21,39 @@
  */
 namespace tut
 {
+
+/**
+ * The base for all TUT exceptions.
+ */
+struct tut_error : public std::exception
+{
+    tut_error(const std::string& msg)
+        : err_msg(msg)
+    {
+    }
+    
+    ~tut_error() throw()
+    {
+    }
+    
+    const char* what() const throw()
+    {
+        return err_msg.c_str();
+    }
+    
+private:
+
+    std::string err_msg;
+};
+
 /**
  * Exception to be throwed when attempted to execute 
  * missed test by number.
  */
-struct no_such_test : public std::logic_error
+struct no_such_test : public tut_error
 {
     no_such_test() 
-        : std::logic_error("no such test")
+        : tut_error("no such test")
     {
     }
 };
@@ -49,10 +73,10 @@ struct beyond_last_test : public no_such_test
 /**
  * Group not found exception.
  */
-struct no_such_group : public std::logic_error
+struct no_such_group : public tut_error
 {
-    no_such_group(const std::string& grp) :
-            std::logic_error(grp)
+    no_such_group(const std::string& grp) 
+        : tut_error(grp)
     {
     }
 };
@@ -72,10 +96,10 @@ struct no_more_tests
  * Internal exception to be throwed when 
  * test constructor has failed.
  */
-struct bad_ctor : public std::logic_error
+struct bad_ctor : public tut_error
 {
-    bad_ctor(const std::string& msg) :
-            std::logic_error(msg)
+    bad_ctor(const std::string& msg) 
+        : tut_error(msg)
     {
     }
 };
@@ -83,10 +107,10 @@ struct bad_ctor : public std::logic_error
 /**
  * Exception to be throwed when ensure() fails or fail() called.
  */
-struct failure : public std::logic_error
+struct failure : public tut_error
 {
     failure(const std::string& msg) 
-        : std::logic_error(msg)
+        : tut_error(msg)
     {
     }
 };
@@ -94,10 +118,10 @@ struct failure : public std::logic_error
 /**
  * Exception to be throwed when test desctructor throwed an exception.
  */
-struct warning : public std::logic_error
+struct warning : public tut_error
 {
     warning(const std::string& msg) 
-        : std::logic_error(msg)
+        : tut_error(msg)
     {
     }
 };
@@ -105,10 +129,10 @@ struct warning : public std::logic_error
 /**
  * Exception to be throwed when test issued SEH (Win32)
  */
-struct seh : public std::logic_error
+struct seh : public tut_error
 {
     seh(const std::string& msg) 
-        : std::logic_error(msg)
+        : tut_error(msg)
     {
     }
 };
@@ -299,7 +323,7 @@ public:
     {
         if (gr == 0)
         {
-            throw std::invalid_argument("group shall be non-null");
+            throw tut_error("group shall be non-null");
         }
 
         // TODO: inline variable
@@ -310,7 +334,7 @@ public:
             // this exception terminates application so we use cerr also
             // TODO: should this message appear in stream?
             std::cerr << msg << std::endl;
-            throw std::logic_error(msg);
+            throw tut_error(msg);
         }
 
         groups_[name] = gr;
@@ -556,6 +580,15 @@ void ensure(bool cond)
 
 /**
  * Tests provided condition.
+ * Throws if true.
+ */
+void ensure_not(bool cond)
+{
+    ensure(!cond);
+}
+
+/**
+ * Tests provided condition.
  * Throws if false.
  */
 template <typename T>
@@ -565,6 +598,16 @@ void ensure(const T msg, bool cond)
     {
         throw failure(msg);
     }
+}
+
+/**
+ * Tests provided condition.
+ * Throws if true.
+ */
+template <typename T>
+void ensure_not(const T msg, bool cond)
+{
+    ensure(msg, !cond);
 }
 
 /**
@@ -582,10 +625,11 @@ void ensure_equals(const char* msg, const Q& actual, const T& expected)
         std::stringstream ss;
         ss << (msg ? msg : "") 
             << (msg ? ":" : "") 
-            << " expected " 
+            << " expected '" 
             << expected 
-            << " actual " 
-            << actual;
+            << "' actual '" 
+            << actual
+            << '\'';
         throw failure(ss.str().c_str());
     }
 }
@@ -614,12 +658,13 @@ void ensure_distance(const char* msg, const T& actual, const T& expected,
         std::stringstream ss;
         ss << (msg ? msg : "") 
             << (msg? ":" : "") 
-            << "expected [" 
+            << " expected (" 
             << expected-distance 
-            << ";"
+            << " - "
             << expected+distance 
-            << "] actual " 
-            << actual;
+            << ") actual '" 
+            << actual
+            << '\'';
         throw failure(ss.str().c_str());
     }
 }
@@ -952,7 +997,7 @@ private:
                 test_result::term, ex);
             return tr;
         }
-        catch(const bad_ctor& ex)
+        catch (const bad_ctor& ex)
         {
             // test failed because test ctor failed; stop the whole group
             if (obj.get())
@@ -963,7 +1008,7 @@ private:
                 test_result::ex_ctor, ex);
             return tr;
         }
-        catch(const std::exception& ex)
+        catch (const std::exception& ex)
         {
             // test failed with std::exception
             if (obj.get())
@@ -974,7 +1019,7 @@ private:
                 test_result::ex, ex);
             return tr;
         }
-        catch(...)
+        catch (...)
         {
             // test failed with unknown exception
             if (obj.get())
@@ -1048,11 +1093,11 @@ private:
         {
             obj.reset();
         }
-        catch(const std::exception& ex)
+        catch (const std::exception& ex)
         {
             throw bad_ctor(ex.what());
         }
-        catch(...)
+        catch (...)
         {
             throw bad_ctor("test constructor has generated an exception;"
                 " group execution is terminated");

@@ -2,7 +2,6 @@
 
 #include <stdexcept>
 
-using std::logic_error;
 using std::runtime_error;
 
 namespace tut
@@ -63,7 +62,7 @@ void object::test<10>()
         ensure_distance("2!~1", 2, 1, 1);
         throw runtime_error("ensure_distance failed");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
 
@@ -72,7 +71,7 @@ void object::test<10>()
         ensure_distance("0!~1", 0, 1, 1);
         throw runtime_error("ensure_distance failed");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
 }
@@ -91,7 +90,7 @@ void object::test<11>()
         ensure_distance(2, 1, 1);
         throw runtime_error("ensure_distance failed");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
 
@@ -100,7 +99,7 @@ void object::test<11>()
         ensure_distance(0, 1, 1);
         throw runtime_error("ensure_distance failed");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
 }
@@ -119,7 +118,7 @@ void object::test<12>()
         ensure_distance("1.0!=1.02", 1.02, 1.0, 0.01);
         throw runtime_error("ensure_distance failed");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
 
@@ -128,7 +127,7 @@ void object::test<12>()
         ensure_distance("1.0!=0.98", 0.98, 1.0, 0.01);
         throw runtime_error("ensure_distance failed");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
 }

@@ -1,9 +1,9 @@
 #include <tut.h>
 #include <string>
+#include <stdexcept>
 
 using std::string;
 using std::runtime_error;
-using std::logic_error;
 
 namespace tut
 {
@@ -71,7 +71,7 @@ void object::test<10>()
         ensure_equals("2!=n", 2, n);
         throw runtime_error("ensure_equals failed");
     }
-    catch (const logic_error& ex)
+    catch (const failure& ex)
     {
         if (string(ex.what()).find("2!=n") == string::npos)
         {
@@ -95,7 +95,7 @@ void object::test<11>()
         ensure_equals("string(foo)!=boo", string("foo"), "boo");
         throw runtime_error("ensure_equals failed");
     }
-    catch (const logic_error& ex)
+    catch (const failure& ex)
     {
         if (string(ex.what()).find("string(foo)!=boo") == string::npos)
         {
@@ -118,7 +118,7 @@ void object::test<12>()
         ensure_equals("string(foo)!=string(boo)", string("foo"), string("boo"));
         throw runtime_error("ensure_equals failed");
     }
-    catch (const logic_error& ex)
+    catch (const failure& ex)
     {
         if (string(ex.what()).find("string(foo)!=string(boo)") == string::npos)
         {

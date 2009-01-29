@@ -4,7 +4,6 @@
 
 using std::string;
 using std::runtime_error;
-using std::logic_error;
 
 namespace tut
 {
@@ -31,7 +30,7 @@ void object::test<1>()
         fail("A Fail");
         throw runtime_error("fail doesn't work");
     }
-    catch (const logic_error& ex)
+    catch (const failure& ex)
     {
         if (string(ex.what()).find("A Fail") == string::npos )
         {
@@ -51,7 +50,7 @@ void object::test<2>()
         fail();
         throw runtime_error("fail doesn't work");
     }
-    catch (const logic_error&)
+    catch (const failure&)
     {
     }
 }

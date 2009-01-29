@@ -1,5 +1,9 @@
 #include <tut.h>
 
+#include <stdexcept>
+
+using std::runtime_error;
+
 /*
  * If the test ctor throws an exception, we shall terminate current group
  * execution: there is no reason to continue to run tests in that group as they
@@ -34,7 +38,7 @@ struct ctor_ex
     {
         dummy()
         {
-            throw std::runtime_error("dummy has throwed an exception");
+            throw runtime_error("dummy has throwed an exception");
         }
     };
 
@@ -59,7 +63,7 @@ struct ctor_ex2
         {
             if (cnt++ == 1)
             {
-                throw std::runtime_error("dummy has throwed an exception");
+                throw runtime_error("dummy has throwed an exception");
             }
         }
     };

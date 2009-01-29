@@ -1,6 +1,8 @@
 
 #include <tut.h>
 
+#include <string>
+#include <stdexcept>
 #include <vector>
 
 using std::vector;

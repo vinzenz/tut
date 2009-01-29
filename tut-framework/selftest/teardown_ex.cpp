@@ -2,7 +2,6 @@
 #include <stdexcept>
 
 using std::runtime_error;
-using std::logic_error;
 
 namespace tut
 {
@@ -76,7 +75,7 @@ template<>
 template<>
 void teardown_ex::object::test<4>()
 {
-    throw logic_error("regular");
+    throw tut_error("regular");
 }
 
 teardown_ex::teardown_ex() 
