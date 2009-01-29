@@ -1,0 +1,17 @@
+TGT=shared_ptr$(SFX)
+OBJS=main$(OFX) test_shared_ptr$(OFX)
+
+all: $(TGT)
+
+clean: 
+	$(RM) $(OBJS) $(TGT)
+
+$(TGT): $(OBJS)
+	$(LNK) $(LNKOPTS)$(TGT) $(OBJS)
+
+test_shared_ptr$(OFX) : test_shared_ptr.cpp
+	$(CXX) $(CXXOPTS)test_shared_ptr$(OFX) test_shared_ptr.cpp 
+
+main$(OFX) : main.cpp
+	$(CXX) $(CXXOPTS)main$(OFX) main.cpp 
+
