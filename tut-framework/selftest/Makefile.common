@@ -4,7 +4,7 @@ OBJS=main$(OFX) runner$(OFX) setup_ex$(OFX) setup_new_copy$(OFX) \
      ensure_equals$(OFX) ensure_distance$(OFX) runtime_exceptions$(OFX) \
      more_than_50$(OFX) less_than_50$(OFX) same_object_for_dummy$(OFX) \
      reporter$(OFX) outside$(OFX) ctor_ex$(OFX) constructed_instances$(OFX) \
-     bug_ensure_0_equals_0$(OFX) set_test_name$(OFX)
+     bug_ensure_0_equals_0$(OFX) set_test_name$(OFX) ensure_not$(OFX)
 
 all: $(TGT)
 
@@ -73,3 +73,6 @@ bug_ensure_0_equals_0$(OFX) : bug_ensure_0_equals_0.cpp ../tut.h
 
 set_test_name$(OFX) : set_test_name.cpp ../tut.h
 	$(CXX) $(CXXOPTS)set_test_name$(OFX) set_test_name.cpp 
+
+ensure_not$(OFX) : ensure_not.cpp ../tut.h
+	$(CXX) $(CXXOPTS)ensure_not$(OFX) ensure_not.cpp 
