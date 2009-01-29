@@ -2,60 +2,69 @@
 #include <tut_reporter.h>
 #include <iostream>
 
+using std::exception;
+using std::string;
+using std::cout;
+using std::cerr;
+using std::endl;
+
+using tut::reporter;
+using tut::groupnames;
+
 namespace tut
 {
-  test_runner_singleton runner;
+test_runner_singleton runner;
 }
 
-int main(int argc,const char* argv[])
+int main(int argc, const char* argv[])
 {
-  tut::reporter visi;
+    reporter visi;
 
-  if( argc < 2 || argc > 3 )
-  {
-    std::cout << "TUT example test application." << std::endl;
-    std::cout << "Usage: example [regression] | [list] | [ group] [test]" << std::endl;
-    std::cout << "       List all groups: example list" << std::endl;
-    std::cout << "       Run all tests: example regression" << std::endl;
-    std::cout << "       Run one group: example std::auto_ptr" << std::endl;
-    std::cout << "       Run one test: example std::auto_ptr 3" << std::endl;;
-  }
-
-  std::cout << "\nFAILURE and EXCEPTION in these tests are FAKE ;)\n\n";
-
-  tut::runner.get().set_callback(&visi);
-
-  try
-  {
-    if( argc == 1 || (argc == 2 && std::string(argv[1]) == "regression") )
+    if (argc < 2 || argc > 3)
     {
-      tut::runner.get().run_tests();
+        cout << "TUT example test application." << endl;
+        cout << "Usage: example [regression] | [list] | [ group] [test]" << endl;
+        cout << "       List all groups: example list" << endl;
+        cout << "       Run all tests: example regression" << endl;
+        cout << "       Run one group: example std::auto_ptr" << endl;
+        cout << "       Run one test: example std::auto_ptr 3" << endl;
     }
-    else if( argc == 2 && std::string(argv[1]) == "list" )
-    {
-      std::cout << "registered test groups:" << std::endl;
-      tut::groupnames gl = tut::runner.get().list_groups();
-      tut::groupnames::const_iterator i = gl.begin();
-      tut::groupnames::const_iterator e = gl.end();
-      while( i != e )
-      {
-        std::cout << "  " << *i << std::endl;
-        ++i;
-      }
-    }
-    else if( argc == 2 && std::string(argv[1]) != "regression" )
-    {
-      tut::runner.get().run_tests(argv[1]);
-    }
-    else if( argc == 3 )
-    {
-      tut::runner.get().run_test(argv[1],::atoi(argv[2]));
-    }
-  }
-  catch( const std::exception& ex )
-  {
-    std::cerr << "tut raised ex: " << ex.what() << std::endl;
-  }
 
-  return 0;
+    cout << "\nFAILURE and EXCEPTION in these tests are FAKE ;)\n\n";
+
+    tut::runner.get().set_callback(&visi);
+
+    try
+    {
+        if (argc == 1 || (argc == 2 && string(argv[1]) == "regression"))
+        {
+            tut::runner.get().run_tests();
+        }
+        else if (argc == 2 && string(argv[1]) == "list")
+        {
+            cout << "registered test groups:" << endl;
+            groupnames gl = tut::runner.get().list_groups();
+            groupnames::const_iterator i = gl.begin();
+            groupnames::const_iterator e = gl.end();
+            while(i != e)
+            {
+                cout << "  " << *i << endl;
+                ++i;
+            }
+        }
+        else if (argc == 2 && string(argv[1]) != "regression")
+        {
+            tut::runner.get().run_tests(argv[1]);
+        }
+        else if (argc == 3)
+        {
+            tut::runner.get().run_test(argv[1],::atoi(argv[2]));
+        }
+    }
+    catch (const exception& ex)
+    {
+        cerr << "tut raised ex: " << ex.what() << endl;
+    }
+
+    return 0;
 }

@@ -1,160 +1,176 @@
 #include <tut.h>
+#include <stdexcept>
+
+using std::runtime_error;
+using std::logic_error;
 
 namespace tut
 {
-  /**
-   * Testing exceptions in teardown (cleanup) of test;
-   * one run issues an integer 0 exception, 
-   * another -- std::exception.
-   */
-  struct teardown_ex
-  {   
+    
+/**
+ * Testing exceptions in teardown (cleanup) of test;
+ * one run issues an integer 0 exception, 
+ * another -- std::exception.
+ */
+struct teardown_ex
+{
     test_runner tr;
     struct dummy
-    { 
-      ~dummy()
-      {
-        static int n = 0;
+    {
+        ~dummy()
+        {
+            static int n = 0;
 #if defined(TUT_USE_SEH)
-        static int d = 3;
+            static int d = 3;
 #else
-        static int d = 2;
+            static int d = 2;
 #endif
-        n++;
-        if( n % d == 1 )
-        {
-          throw std::runtime_error("ex in destructor");
-        }
+            n++;
+            if( n % d == 1 )
+            {
+                throw runtime_error("ex in destructor");
+            }
 #if defined(TUT_USE_SEH)
-        else if( n % d == 0 )
-        {
-          // at test 3
-          *((char*)0) = 0;
-        }
+            else if( n % d == 0 )
+            {
+                // at test 3
+                *((char*)0) = 0;
+            }
 #endif
-        else
-        {
-          throw 0;
+            else
+            {
+                throw 0;
+            }
         }
-      };
     };
+    
     typedef test_group<dummy> tf;
     typedef tf::object object;
     tf factory;
 
     teardown_ex();
-  };
+};
 
-  /**
-   * Internal test definition
-   */
-  template<>
-  template<>
-  void teardown_ex::object::test<1>()
-  {
-  }
+/**
+ * Internal test definition
+ */
+template<>
+template<>
+void teardown_ex::object::test<1>()
+{
+}
 
-  template<>
-  template<>
-  void teardown_ex::object::test<2>()
-  {
-  }
+template<>
+template<>
+void teardown_ex::object::test<2>()
+{
+}
 
-  template<>
-  template<>
-  void teardown_ex::object::test<3>()
-  {
-  }
+template<>
+template<>
+void teardown_ex::object::test<3>()
+{
+}
 
-  template<>
-  template<>
-  void teardown_ex::object::test<4>()
-  {
-    throw std::logic_error("regular");
-  }
+template<>
+template<>
+void teardown_ex::object::test<4>()
+{
+    throw logic_error("regular");
+}
 
-  teardown_ex::teardown_ex() : factory("internal",tr)
-  {
-  }
+teardown_ex::teardown_ex() 
+    : factory("internal", tr)
+{
+}
 
-  typedef test_group<teardown_ex> tf;
-  typedef tf::object object;
-  tf teardown_ex("exceptions at test teardown time");
+typedef test_group<teardown_ex> tf;
+typedef tf::object object;
+tf teardown_ex("exceptions at test teardown time");
 
-  /**
-   * Checks getting std exception in.
-   */
-  template<>
-  template<>
-  void object::test<1>()
-  {
+/**
+ * Checks getting std exception in.
+ */
+template<>
+template<>
+void object::test<1>()
+{
+    set_test_name("checks getting std::exception");
+    
     test_result res = tr.run_test("internal",1);
-    ensure("warning",res.result == test_result::warn);
-  }
+    ensure("warning", res.result == test_result::warn);
+}
 
-  /**
-   * Checks getting unknown std exception.
-   */
-  template<>
-  template<>
-  void object::test<2>()
-  {
+/**
+ * Checks getting unknown std exception.
+ */
+template<>
+template<>
+void object::test<2>()
+{
+    set_test_name("checks getting unknown std::exception");
+    
     test_result res = tr.run_test("internal",2);
-    ensure("warning",res.result == test_result::warn);
-  }
+    ensure("warning", res.result == test_result::warn);
+}
 
 #if defined(TUT_USE_SEH)
-  /**
-   * Checks getting unknown std exception.
-   */
-  template<>
-  template<>
-  void object::test<3>()
-  {
+/**
+ * Checks getting unknown std exception.
+ */
+template<>
+template<>
+void object::test<3>()
+{
+    set_test_name("checks getting unknown C++ exception");
+    
     test_result res = tr.run_test("internal",3);
-    ensure_equals("warning",res.result,test_result::warn);
-    ensure("warning message",res.message != "ex in destructor");
-  }
+    ensure_equals("warning", res.result, test_result::warn);
+    ensure("warning message", res.message != "ex in destructor");
+}
 #endif
 
-  /**
-   * Checks getting std exception in runtime.
-   */
-  template<>
-  template<>
-  void object::test<4>()
-  {
+/**
+ * Checks getting std exception in runtime.
+ */
+template<>
+template<>
+void object::test<4>()
+{
+    set_test_name("checks getting std::exception in runtime");
+    
     test_result res = tr.run_test("internal",4);
-    ensure("ex",res.result == test_result::ex);
-    ensure("ex message",res.message == "regular");
-  }
+    ensure("ex", res.result == test_result::ex);
+    ensure("ex message", res.message == "regular");
+}
 
-  template<>
-  template<>
-  void object::test<5>()
-  {
+template<>
+template<>
+void object::test<5>()
+{
     tr.run_tests("internal");
-  }
+}
 
-  template<>
-  template<>
-  void object::test<6>()
-  {
+template<>
+template<>
+void object::test<6>()
+{
     tr.run_tests("internal");
-  }
+}
 
-  template<>
-  template<>
-  void object::test<7>()
-  {
+template<>
+template<>
+void object::test<7>()
+{
     tr.run_tests();
-  }
+}
 
-  template<>
-  template<>
-  void object::test<8>()
-  {
+template<>
+template<>
+void object::test<8>()
+{
     tr.run_tests();
-  }
+}
+
 }
 

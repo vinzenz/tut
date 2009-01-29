@@ -1,5 +1,4 @@
 #include <tut.h>
-#include <set>
 
 /**
  * This example test group imitates very poor code with
@@ -7,52 +6,54 @@
  */
 namespace tut
 {
-  struct segfault_data
-  { 
-  };
 
-  typedef test_group<segfault_data> tg;
-  typedef tg::object object;
-  tg segfault_group("seg fault 1");
+struct segfault_data
+{
+};
 
-  template<>
-  template<>
-  void object::test<1>()
-  {
-  }
+typedef test_group<segfault_data> tg;
+typedef tg::object object;
+tg segfault_group("seg fault 1");
 
-  template<>
-  template<>
-  void object::test<2>()
-  {
-  }
+template<>
+template<>
+void object::test<1>()
+{
+}
 
-  template<>
-  template<>
-  void object::test<3>()
-  {
+template<>
+template<>
+void object::test<2>()
+{
+}
+
+template<>
+template<>
+void object::test<3>()
+{
     *((char*)0) = 'x';
-  }
+}
 
-  template<>
-  template<>
-  void object::test<4>()
-  {
+template<>
+template<>
+void object::test<4>()
+{
     // OK
-  }
+}
 
-  template<>
-  template<>
-  void object::test<5>()
-  {
+template<>
+template<>
+void object::test<5>()
+{
     *((char*)0) = 'x';
-  }
+}
 
-  template<>
-  template<>
-  void object::test<6>()
-  {
+template<>
+template<>
+void object::test<6>()
+{
     // OK
-  }
+}
+
 }
 

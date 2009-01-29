@@ -2,54 +2,57 @@
 #include <tut_reporter.h>
 #include <sstream>
 
+using std::stringstream;
+
 namespace tut
 {
-  /**
-   * Testing reporter.
-   */
-  struct reporter_test
-  {
-    tut::test_result tr1;
-    tut::test_result tr2;
-    tut::test_result tr3;
-    tut::test_result tr4;
-    tut::test_result tr5;
+    
+/**
+ * Testing reporter.
+ */
+struct reporter_test
+{
+    test_result tr1;
+    test_result tr2;
+    test_result tr3;
+    test_result tr4;
+    test_result tr5;
 
-    reporter_test() :
-      tr1("foo",1,"",tut::test_result::ok),
-      tr2("foo",2,"",tut::test_result::fail),
-      tr3("foo",3,"",tut::test_result::ex),
-      tr4("foo",4,"",tut::test_result::warn),
-      tr5("foo",5,"",tut::test_result::term)
+    reporter_test() 
+        : tr1("foo", 1, "", test_result::ok),
+          tr2("foo", 2, "", test_result::fail),
+          tr3("foo", 3, "", test_result::ex),
+          tr4("foo", 4, "", test_result::warn),
+          tr5("foo", 5, "", test_result::term)
     {
     }
-  };
+};
 
-  typedef test_group<reporter_test> tg;
-  typedef tg::object object;
-  tg reporter_test("default reporter");
+typedef test_group<reporter_test> tg;
+typedef tg::object object;
+tg reporter_test("default reporter");
 
-  template<>
-  template<>
-  void object::test<1>()
-  {
-    std::stringstream ss;
+template<>
+template<>
+void object::test<1>()
+{
+    stringstream ss;
     ss << tr1 << tr2 << tr3 << tr4 << tr5;
-    ensure_equals("operator << formatter",ss.str(),".[2=F][3=X][4=W][5=T]");
-  }
+    ensure_equals("operator << formatter", ss.str(), ".[2=F][3=X][4=W][5=T]");
+}
 
-  template<>
-  template<>
-  void object::test<2>()
-  {
-    std::stringstream ss;
-    tut::reporter repo(ss);
+template<>
+template<>
+void object::test<2>()
+{
+    stringstream ss;
+    reporter repo(ss);
 
-    ensure_equals("ok count",repo.ok_count,0);
-    ensure_equals("fail count",repo.failures_count,0);
-    ensure_equals("ex count",repo.exceptions_count,0);
-    ensure_equals("warn count",repo.warnings_count,0);
-    ensure_equals("term count",repo.terminations_count,0);
+    ensure_equals("ok count", repo.ok_count, 0);
+    ensure_equals("fail count", repo.failures_count, 0);
+    ensure_equals("ex count", repo.exceptions_count, 0);
+    ensure_equals("warn count", repo.warnings_count, 0);
+    ensure_equals("term count", repo.terminations_count, 0);
 
     repo.run_started();
     repo.test_completed(tr1);
@@ -68,18 +71,18 @@ namespace tut
     repo.test_completed(tr5);
     repo.test_completed(tr5);
 
-    ensure_equals("ok count",repo.ok_count,1);
-    ensure_equals("fail count",repo.failures_count,2);
-    ensure_equals("ex count",repo.exceptions_count,3);
-    ensure_equals("warn count",repo.warnings_count,4);
-    ensure_equals("term count",repo.terminations_count,5);
+    ensure_equals("ok count", repo.ok_count, 1);
+    ensure_equals("fail count", repo.failures_count, 2);
+    ensure_equals("ex count", repo.exceptions_count, 3);
+    ensure_equals("warn count", repo.warnings_count, 4);
+    ensure_equals("term count", repo.terminations_count, 5);
     ensure(!repo.all_ok());
-  }
+}
 
-  template<>
-  template<>
-  void object::test<3>()
-  {
+template<>
+template<>
+void object::test<3>()
+{
     std::stringstream ss;
     tut::reporter repo(ss);
 
@@ -91,14 +94,14 @@ namespace tut
 
     repo.run_started();
     ensure_equals("ok count",repo.ok_count,0);
-  }
+}
 
-  template<>
-  template<>
-  void object::test<4>()
-  {
-    std::stringstream ss;
-    tut::reporter repo(ss);
+template<>
+template<>
+void object::test<4>()
+{
+    stringstream ss;
+    reporter repo(ss);
 
     repo.run_started();
     repo.test_completed(tr1);
@@ -123,6 +126,7 @@ namespace tut
     repo.test_completed(tr5);
     repo.test_completed(tr1);
     ensure(!repo.all_ok());
-  }
+}
+
 }
 

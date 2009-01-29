@@ -1,140 +1,157 @@
 #include <tut.h>
+#include <string>
+
+using std::string;
 
 namespace tut
 {
-	
-	struct test_callback : public callback
-	{
-		void run_started()
-		{
-		}
-		
-		void test_group_started(const std::string&)
-		{
-		}
 
-		void test_completed(const tut::test_result& tr)
-		{
-			current_test_name = tr.name;
-		}
+struct test_callback : public callback
+{
+    void run_started()
+    {
+    }
 
-		void run_completed()
-		{
-		}
+    void test_group_started(const std::string&)
+    {
+    }
 
-		std::string current_test_name;		
-	};
-	
-	struct test_name_data
-	{
-		test_runner runner;
-		test_callback callback;
+    void test_completed(const tut::test_result& tr)
+    {
+        current_test_name = tr.name;
+    }
 
-    	struct dummy{};
-    	typedef test_group < dummy > tf;
-    	typedef tf::object object;
-    	tf factory;
-    	
-    	test_name_data() : factory("internal", runner)
-    	{
-    	}
-	};
+    void run_completed()
+    {
+    }
 
-	/**
-	 * Test functions under real test.
-	 */
-	template < > template < >
-	void test_name_data::object::test < 1 > ()
-	{
-		set_test_name("1");
-	}
+    string current_test_name;
+};
 
-	template < > template < >
-	void test_name_data::object::test < 2 > ()
-	{
-		set_test_name("2");
-	}
+struct test_name_data
+{
+    test_runner runner;
+    test_callback callback;
 
-	template < > template < >
-	void test_name_data::object::test < 3 > ()
-	{
-	}
-	
-	template < > template < >
-	void test_name_data::object::test < 4 > ()
-	{
-		set_test_name("failure");
-		ensure(true == false);
-	}
+    struct dummy
+    {
+    };
+    
+    typedef test_group < dummy > tf;
+    typedef tf::object object;
+    tf factory;
 
-	template < > template < >
-	void test_name_data::object::test < 5 > ()
-	{
-		set_test_name("unexpected");
-		throw "unexpected";
-	}
-	
-#ifdef TUT_USE_SEH
-	template < > template < >
-	void test_name_data::object::test < 6 > ()
-	{
-		set_test_name("seh");
-		 *((char*)0) = 0;
-	}
-#endif // TUT_USE_SEH	
+    test_name_data() 
+        : factory("internal", runner)
+    {
+    }
+}
+;
 
-	typedef test_group < test_name_data > set_test_name_group;
-	typedef set_test_name_group::object set_test_name_tests;
-	
-	set_test_name_group group("set_test_name");
-	
-	/**
-	 * Tests 'set_test_name' works correctly.
-	 */
-	template < > template < >
-	void set_test_name_tests::test < 1 > ()
-	{
-		runner.set_callback(&callback);
-		runner.run_test("internal", 1);
-		ensure_equals("test name", callback.current_test_name, "1");
-		runner.run_test("internal", 2);
-		ensure_equals("test name", callback.current_test_name, "2");
-		runner.run_test("internal", 3);
-		ensure_equals("test name", callback.current_test_name, "");
-	}
-	
-	/**
-	 * Tests 'set_test_name' works correctly on failure.
-	 */
-	template < > template < >
-	void set_test_name_tests::test < 2 > ()
-	{
-		runner.set_callback(&callback);
-		runner.run_test("internal", 4);
-		ensure_equals("test name", callback.current_test_name, "failure");
-	}
-	 
-	/**
-	 * Tests 'set_test_name' works correctly on unexpected exception.
-	 */
-	template < > template < >
-	void set_test_name_tests::test < 3 > ()
-	{
-		runner.set_callback(&callback);
-		runner.run_test("internal", 5);
-		ensure_equals("test name", callback.current_test_name, "unexpected");
-	}
+/**
+ * Test functions under real test.
+ */
+template < >
+template < >
+void test_name_data::object::test < 1 > ()
+{
+    set_test_name("1");
+}
+
+template < >
+template < >
+void test_name_data::object::test < 2 > ()
+{
+    set_test_name("2");
+}
+
+template < >
+template < >
+void test_name_data::object::test < 3 > ()
+{}
+
+template < >
+template < >
+void test_name_data::object::test < 4 > ()
+{
+    set_test_name("failure");
+    ensure(true == false);
+}
+
+template < >
+template < >
+void test_name_data::object::test < 5 > ()
+{
+    set_test_name("unexpected");
+    throw "unexpected";
+}
 
 #ifdef TUT_USE_SEH
-	/**
-	 * Tests 'set_test_name' works correctly on structured exception.
-	 */
-	template < > template < >
-	void set_test_name_tests::test < 4 > ()
-	{
-		runner.set_callback(&callback);
-		runner.run_test("internal", 6);
-		ensure_equals("test name", callback.current_test_name, "seh");
-	}
+template < >
+template < >
+void test_name_data::object::test < 6 > ()
+{
+    set_test_name("seh");
+    *((char*)0) = 0;
+}
+#endif // TUT_USE_SEH
+
+typedef test_group < test_name_data > set_test_name_group;
+typedef set_test_name_group::object set_test_name_tests;
+
+set_test_name_group group("set_test_name");
+
+/**
+ * Tests 'set_test_name' works correctly.
+ */
+template < >
+template < >
+void set_test_name_tests::test < 1 > ()
+{
+    runner.set_callback(&callback);
+    runner.run_test("internal", 1);
+    ensure_equals("test name", callback.current_test_name, "1");
+    runner.run_test("internal", 2);
+    ensure_equals("test name", callback.current_test_name, "2");
+    runner.run_test("internal", 3);
+    ensure_equals("test name", callback.current_test_name, "");
+}
+
+/**
+ * Tests 'set_test_name' works correctly on failure.
+ */
+template < >
+template < >
+void set_test_name_tests::test < 2 > ()
+{
+    runner.set_callback(&callback);
+    runner.run_test("internal", 4);
+    ensure_equals("test name", callback.current_test_name, "failure");
+}
+
+/**
+ * Tests 'set_test_name' works correctly on unexpected exception.
+ */
+template < >
+template < >
+void set_test_name_tests::test < 3 > ()
+{
+    runner.set_callback(&callback);
+    runner.run_test("internal", 5);
+    ensure_equals("test name", callback.current_test_name, "unexpected");
+}
+
+#ifdef TUT_USE_SEH
+/**
+ * Tests 'set_test_name' works correctly on structured exception.
+ */
+template < >
+template < >
+void set_test_name_tests::test < 4 > ()
+{
+    runner.set_callback(&callback);
+    runner.run_test("internal", 6);
+    ensure_equals("test name", callback.current_test_name, "seh");
+}
 #endif // TUT_USE_SEH
 }

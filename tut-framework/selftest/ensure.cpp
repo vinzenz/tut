@@ -1,4 +1,13 @@
 #include <tut.h>
+#include <string>
+#include <sstream>
+#include <stdexcept>
+
+using std::string;
+using std::ostringstream;
+using std::runtime_error;
+using std::logic_error;
+
 
 namespace tut
 {
@@ -20,7 +29,9 @@ namespace tut
   template<>
   void object::test<1>()
   {
-    ensure("OK",1==1);
+    set_test_name("checks positive ensure");
+    
+    ensure("OK", 1==1);
     ensure(1==1);
   }
 
@@ -31,28 +42,30 @@ namespace tut
   template<>
   void object::test<2>()
   {
+    set_test_name("checks negative ensure");
+    
     try
     {
-      ensure("ENSURE",1==2);
+      ensure("ENSURE", 1==2);
 
       // we cannot relay on fail here; we haven't tested it yet ;)
-      throw std::runtime_error("passed below");
+      throw runtime_error("passed below");
     }
-    catch( const std::logic_error& ex )
+    catch (const logic_error& ex)
     {
-      std::string msg = ex.what();
-      if( msg.find("ENSURE") == std::string::npos )
+      string msg = ex.what();
+      if(msg.find("ENSURE") == string::npos )
       {
-        throw std::runtime_error("ex.what has no ENSURE");
+        throw runtime_error("ex.what has no ENSURE");
       }
     }
 
     try
     {
-      ensure(1==2);
-      throw std::runtime_error("passed below");
+      ensure(1 == 2);
+      throw runtime_error("passed below");
     }
-    catch( const std::logic_error& ex )
+    catch (const logic_error&)
     {
     }
   }
@@ -64,34 +77,40 @@ namespace tut
   template<>
   void object::test<3>()
   {
+    set_test_name("checks ensure with const char*");
+    
     const char* ok1 = "OK";
-    ensure(ok1,1==1);
+    ensure(ok1, 1 == 1);
   }
 
   template<>
   template<>
   void object::test<4>()
   {
-
+    set_test_name("checks ensure with char*");
+    
     char* ok2 = "OK";
-    ensure(ok2,1==1);
+    ensure(ok2, 1 == 1);
   }
 
   template<>
   template<>
   void object::test<5>()
   {
-    std::string msg = "OK";
-    ensure(msg,1==1);
+    set_test_name("checks ensure with std::string");
+    
+    string msg = "OK";
+    ensure(msg, 1 == 1);
   }
 
   template<>
   template<>
   void object::test<6>()
   {
-    std::ostringstream oss;
+    set_test_name("checks ensure with std::ostringstream");
+    
+    ostringstream oss;
     oss << "OK";
-    ensure(oss.str(),1==1);
+    ensure(oss.str(), 1 == 1);
   }
 }
-
