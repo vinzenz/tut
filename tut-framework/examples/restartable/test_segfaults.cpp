@@ -1,4 +1,4 @@
-#include <tut.h>
+#include <tut/tut.hpp>
 
 /**
  * This example test group imitates very poor code with

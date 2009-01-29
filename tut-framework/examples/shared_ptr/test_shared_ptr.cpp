@@ -1,4 +1,4 @@
-#include <tut.h>
+#include <tut/tut.hpp>
 #include <stdexcept>
 
 #include "shared_ptr.h"

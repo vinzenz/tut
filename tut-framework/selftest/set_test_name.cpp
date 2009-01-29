@@ -1,4 +1,4 @@
-#include <tut.h>
+#include <tut/tut.hpp>
 #include <string>
 
 using std::string;
