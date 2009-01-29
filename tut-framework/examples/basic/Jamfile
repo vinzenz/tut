@@ -1,12 +1,12 @@
 
-rule gcc-only-optimization-off ( source )
+rule mingw-only-optimization-off ( source )
 {
 	obj $(source:B) : $(source) : <os>NT,<toolset>gcc:<optimization>off ;
 }
 
 exe basic 
 	: main.cpp 
-	[ gcc-only-optimization-off test_auto_ptr.cpp ]
-	[ gcc-only-optimization-off test_set.cpp ]
-	[ gcc-only-optimization-off test_vector.cpp ]
+	[ mingw-only-optimization-off test_auto_ptr.cpp ]
+	[ mingw-only-optimization-off test_set.cpp ]
+	[ mingw-only-optimization-off test_vector.cpp ]
 	: <include>../.. ;
