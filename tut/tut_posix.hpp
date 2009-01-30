@@ -248,22 +248,12 @@ private:
                     return;
                 }
                 else
-                {
-                    std::stringstream ss;
+            {
+                std::stringstream ss;
                     char e[1024];
                     ss << "child " << pid << " could not be killed with SIGKILL, " << strerror_r(errno, e, sizeof(e)) << std::endl;
-                    fail(ss.str());
-                }
+                fail(ss.str());
             }
-
-            ensure_equals("wait after SIGKILL", waitpid_(pid, &status), pid);
-            ensure_child_signal_(status, SIGKILL);
-
-            ensure_equals("child process exists after SIGKILL", ::kill(pid, 0), -1);
-
-            std::stringstream ss;
-            ss << "child " << pid << " had to be killed with SIGKILL";
-            fail(ss.str());
         }
 
             ensure_equals("wait after SIGKILL", waitpid_(pid, &status), pid);

@@ -46,7 +46,7 @@ struct ctor_ex
     typedef tf::object object;
     tf factory;
 
-    ctor_ex()
+    ctor_ex() 
         : factory("internal", tr)
     {
     }
@@ -72,7 +72,7 @@ struct ctor_ex2
     typedef tf::object object;
     tf factory;
 
-    ctor_ex2()
+    ctor_ex2() 
         : factory("internal 2", tr)
     {
     }
