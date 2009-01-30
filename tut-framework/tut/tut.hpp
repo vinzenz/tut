@@ -694,7 +694,7 @@ void ensure_equals(const char* msg, const Act& actual, const Exp& expected)
 template <typename Act, typename Exp>
 void ensure_equals_impl(const char* msg, const Act& actual, const Exp& expected)
 {
-    if (expected != actual)
+    if (!(expected == actual))
     {
         std::stringstream ss;
         ss << (msg ? msg : "") 
