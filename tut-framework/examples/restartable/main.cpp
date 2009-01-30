@@ -1,8 +1,8 @@
 #include <iostream>
 #include <exception>
 
-#include <tut_restartable.h>
-#include <tut_reporter.h>
+#include <tut/tut_restartable.hpp>
+#include <tut/tut_reporter.hpp>
 
 using std::cerr;
 using std::endl;

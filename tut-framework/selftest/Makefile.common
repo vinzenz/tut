@@ -6,6 +6,8 @@ OBJS=main$(OFX) runner$(OFX) setup_ex$(OFX) setup_new_copy$(OFX) \
      reporter$(OFX) outside$(OFX) ctor_ex$(OFX) constructed_instances$(OFX) \
      bug_ensure_0_equals_0$(OFX) set_test_name$(OFX) ensure_not$(OFX)
 
+HEADERS=../tut/tut.hpp
+
 all: $(TGT)
 
 clean: 
@@ -14,65 +16,65 @@ clean:
 $(TGT): $(OBJS)
 	$(LNK) $(LNKOPTS)$(TGT) $(OBJS) 
 
-runner$(OFX) : runner.cpp ../tut.h
+runner$(OFX) : runner.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)runner$(OFX) runner.cpp 
 
-reporter$(OFX) : reporter.cpp ../tut.h
+reporter$(OFX) : reporter.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)reporter$(OFX) reporter.cpp 
 
-setup_ex$(OFX) : setup_ex.cpp ../tut.h
+setup_ex$(OFX) : setup_ex.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)setup_ex$(OFX) setup_ex.cpp 
 
-teardown_ex$(OFX) : teardown_ex.cpp ../tut.h
+teardown_ex$(OFX) : teardown_ex.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)teardown_ex$(OFX) teardown_ex.cpp 
 
-setup_new_copy$(OFX) : setup_new_copy.cpp ../tut.h
+setup_new_copy$(OFX) : setup_new_copy.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)setup_new_copy$(OFX) setup_new_copy.cpp 
 
-callback$(OFX) : callback.cpp ../tut.h
+callback$(OFX) : callback.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)callback$(OFX) callback.cpp 
 
-ensure$(OFX) : ensure.cpp ../tut.h
+ensure$(OFX) : ensure.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)ensure$(OFX) ensure.cpp 
 
-ensure_equals$(OFX) : ensure_equals.cpp ../tut.h
+ensure_equals$(OFX) : ensure_equals.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)ensure_equals$(OFX) ensure_equals.cpp 
 
-ensure_distance$(OFX) : ensure_distance.cpp ../tut.h
+ensure_distance$(OFX) : ensure_distance.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)ensure_distance$(OFX) ensure_distance.cpp 
 
-fail$(OFX) : fail.cpp ../tut.h
+fail$(OFX) : fail.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)fail$(OFX) fail.cpp 
 
-ctor_ex$(OFX) : ctor_ex.cpp ../tut.h
+ctor_ex$(OFX) : ctor_ex.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)ctor_ex$(OFX) ctor_ex.cpp 
 
-runtime_exceptions$(OFX) : runtime_exceptions.cpp ../tut.h
+runtime_exceptions$(OFX) : runtime_exceptions.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)runtime_exceptions$(OFX) runtime_exceptions.cpp 
 
-main$(OFX) : main.cpp  ../tut.h
+main$(OFX) : main.cpp  $(HEADERS)
 	$(CXX) $(CXXOPTS)main$(OFX) main.cpp
 
-more_than_50$(OFX) : more_than_50.cpp ../tut.h
+more_than_50$(OFX) : more_than_50.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)more_than_50$(OFX) more_than_50.cpp 
 
-less_than_50$(OFX) : less_than_50.cpp ../tut.h
+less_than_50$(OFX) : less_than_50.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)less_than_50$(OFX) less_than_50.cpp 
 
-same_object_for_dummy$(OFX) : same_object_for_dummy.cpp ../tut.h
+same_object_for_dummy$(OFX) : same_object_for_dummy.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)same_object_for_dummy$(OFX) same_object_for_dummy.cpp 
 
-outside$(OFX) : outside.cpp ../tut.h
+outside$(OFX) : outside.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)outside$(OFX) outside.cpp 
 
-constructed_instances$(OFX) : constructed_instances.cpp ../tut.h
+constructed_instances$(OFX) : constructed_instances.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)constructed_instances$(OFX) constructed_instances.cpp 
 
-bug_ensure_0_equals_0$(OFX) : bug_ensure_0_equals_0.cpp ../tut.h
+bug_ensure_0_equals_0$(OFX) : bug_ensure_0_equals_0.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)bug_ensure_0_equals_0$(OFX) bug_ensure_0_equals_0.cpp 
 
-set_test_name$(OFX) : set_test_name.cpp ../tut.h
+set_test_name$(OFX) : set_test_name.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)set_test_name$(OFX) set_test_name.cpp 
 
-ensure_not$(OFX) : ensure_not.cpp ../tut.h
+ensure_not$(OFX) : ensure_not.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)ensure_not$(OFX) ensure_not.cpp 
