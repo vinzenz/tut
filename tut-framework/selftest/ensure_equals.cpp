@@ -127,5 +127,40 @@ void object::test<12>()
     }
 }
 
+/**
+ * Checks positive ensure_equals with float type
+ */
+template<>
+template<>
+void object::test<13>()
+{
+    set_test_name("checks positive ensure_equals with float type");
+    float f1 = 1.0f, f2 = 3.0f;
+    ensure_equals("f1/f2 * 10 == 10/3", f1 / f2 * 10, 10 / f2); 
 }
 
+/**
+ * Checks positive ensure_equals with double type
+ */
+template<>
+template<>
+void object::test<14>()
+{
+    set_test_name("checks positive ensure_equals with double type");
+    double d1 = 1.0, d2 = 3.0;
+    ensure_equals("d1/d2 * 10 == 10/3", d1 / d2 * 10, 10 / d2); 
+}
+
+/**
+ * Checks positive ensure_equals with long double type
+ */
+template<>
+template<>
+void object::test<15>()
+{
+    set_test_name("checks positive ensure_equals with long double type");
+    long double d1 = 1.0, d2 = 3.0;
+    ensure_equals("d1/d2 * 10 == 10/3", d1 / d2 * 10, 10 / d2); 
+}
+
+}
