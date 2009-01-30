@@ -46,7 +46,7 @@ struct ctor_ex
     typedef tf::object object;
     tf factory;
 
-    ctor_ex() 
+    ctor_ex()
         : factory("internal", tr)
     {
     }
@@ -72,7 +72,7 @@ struct ctor_ex2
     typedef tf::object object;
     tf factory;
 
-    ctor_ex2() 
+    ctor_ex2()
         : factory("internal 2", tr)
     {
     }
@@ -87,6 +87,40 @@ tf ctor_ex("exceptions at ctor");
 typedef test_group<ctor_ex2> tf2;
 typedef tf2::object object2;
 tf2 ctor_ex2("exceptions at ctor 2");
+
+#if defined(TUT_USE_POSIX)
+struct ctor_ex_posix
+{
+    test_runner tr;
+    static int cnt;
+    struct dummy : public tut_posix<dummy>
+    {
+        dummy()
+        {
+            if (cnt++ == 1)
+            {
+                // this throws
+                fork();
+            }
+        }
+    };
+
+    typedef test_group<dummy> tf;
+    typedef tf::object object;
+    tf factory;
+
+    ctor_ex_posix()
+        : factory("internal posix", tr)
+    {
+    }
+};
+
+int ctor_ex_posix::cnt = 0;
+
+typedef test_group<ctor_ex_posix> tf_posix;
+typedef tf_posix::object object_posix;
+tf_posix ctor_ex_posix("exceptions at ctor posix");
+#endif
 
 template<>
 template<>
@@ -136,6 +170,36 @@ void object2::test<1>()
     tr.run_tests("internal 2");
     ensure_equals("called only twice", cnt.cnt, 2);
 }
+
+#if defined(TUT_USE_POSIX)
+template<>
+template<>
+void object_posix::test<1>()
+{
+    counter cnt;
+    tr.set_callback(&cnt);
+    tr.run_tests("internal posix");
+    ensure_equals("called only twice", cnt.cnt, 2);
+}
+
+template<>
+template<>
+void ctor_ex_posix::object::test<1>()
+{
+}
+
+template<>
+template<>
+void ctor_ex_posix::object::test<2>()
+{
+}
+
+template<>
+template<>
+void ctor_ex_posix::object::test<3>()
+{
+}
+#endif
 
 }
 

@@ -12,6 +12,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <map>
+#include <iterator>
+#include <functional>
 
 #include "tut_result.hpp"
 #include "tut_assert.hpp"
@@ -91,6 +93,16 @@ struct tut_posix
         self->ensure_child_signal_(status, signal);
     }
 
+    std::set<pid_t> get_pids() const
+    {
+        using namespace std;
+
+        const test_object<T> *self = dynamic_cast< const tut::test_object<T>* >(this);
+        ensure("trying to call 'get_pids' in ctor of test object", self != NULL);
+
+        return self->get_pids_();
+    }
+
     virtual ~tut_posix()
     {
     }
@@ -100,6 +112,7 @@ struct tut_posix
 class test_object_posix
 {
 public:
+    typedef std::map<pid_t, int> pid_map;
 
     /**
      * Default constructor
@@ -207,7 +220,7 @@ private:
                 // cannot kill, we are in trouble
                 std::stringstream ss;
                 char e[1024];
-                ss << "child " << pid << " could not be killed, " << strerror_r(errno, e, sizeof(e)) << std::endl;
+                ss << "child " << pid << " could not be killed with SIGTERM, " << strerror_r(errno, e, sizeof(e)) << std::endl;
                 fail(ss.str());
             }
         }
@@ -216,6 +229,8 @@ private:
         {
             // child killed, check signal
             ensure_child_signal_(status, SIGTERM);
+
+            ensure_equals("child process exists after SIGTERM", ::kill(pid, 0), -1);
             return;
         }
 
@@ -225,12 +240,30 @@ private:
         if(waitpid_(pid, &status, WNOHANG) != pid)
         {
             // child is still running, kill it
-            if(::kill(pid, SIGKILL) ==0)
+            if(::kill(pid, SIGKILL) != 0)
             {
-                std::stringstream ss;
-                ss << "child " << pid << " had to be killed with SIGKILL";
-                fail(ss.str());
+                if(errno == ESRCH)
+                {
+                    // no such process
+                    return;
+                }
+                else
+                {
+                    std::stringstream ss;
+                    char e[1024];
+                    ss << "child " << pid << " could not be killed with SIGKILL, " << strerror_r(errno, e, sizeof(e)) << std::endl;
+                    fail(ss.str());
+                }
             }
+
+            ensure_equals("wait after SIGKILL", waitpid_(pid, &status), pid);
+            ensure_child_signal_(status, SIGKILL);
+
+            ensure_equals("child process exists after SIGKILL", ::kill(pid, 0), -1);
+
+            std::stringstream ss;
+            ss << "child " << pid << " had to be killed with SIGKILL";
+            fail(ss.str());
         }
     }
 
@@ -372,7 +405,20 @@ private:
         }
     }
 
-    std::map<pid_t, int> pids_;
+    std::set<pid_t> get_pids_() const
+    {
+        using namespace std;
+
+        set<pid_t> pids;
+        for(pid_map::const_iterator i = pids_.begin(); i != pids_.end(); ++i)
+        {
+            pids.insert( i->first );
+        }
+
+        return pids;
+    }
+    
+    pid_map         pids_;
     int             pipe_;
 };
 

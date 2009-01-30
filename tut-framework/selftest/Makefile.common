@@ -1,5 +1,5 @@
 TGT=selftest$(SFX)
-OBJS=main$(OFX) ensure_fork${OFX} runner$(OFX) setup_ex$(OFX) setup_new_copy$(OFX) \
+OBJS=main$(OFX) ensure_fork${OFX} teardown_reaper${OFX} runner$(OFX) setup_ex$(OFX) setup_new_copy$(OFX) \
      teardown_ex$(OFX) callback$(OFX) ensure$(OFX) fail$(OFX) \
      ensure_equals$(OFX) ensure_distance$(OFX) runtime_exceptions$(OFX) \
      more_than_50$(OFX) less_than_50$(OFX) same_object_for_dummy$(OFX) \
@@ -79,3 +79,6 @@ ensure_not$(OFX) : ensure_not.cpp ../tut.h
 
 ensure_fork$(OFX) : ensure_fork.cpp $(HEADERS)
 	$(CXX) $(CXXOPTS)ensure_fork$(OFX) ensure_fork.cpp 
+
+teardown_reaper$(OFX) : teardown_reaper.cpp $(HEADERS)
+	$(CXX) $(CXXOPTS)teardown_reaper$(OFX) teardown_reaper.cpp 

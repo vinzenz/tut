@@ -15,12 +15,6 @@ namespace tut
      */
     struct ensure_fork_test : public tut_posix<ensure_fork_test>
     {
-        ensure_fork_test()
-        {
-            // TODO: add self-test for failure here
-            // foo();
-        }
-
         bool foo()
         {
             pid_t pid = fork();
@@ -184,7 +178,7 @@ namespace tut
         }
         else
         {
-            kill(getpid(), SIGSEGV);
+            raise(SIGSEGV);
         }
     }
 
@@ -270,7 +264,7 @@ namespace tut
             }
             else
             {
-                kill(getpid(), SIGSEGV);
+                raise(SIGSEGV);
             }
         }
         catch(const std::runtime_error &ex)
