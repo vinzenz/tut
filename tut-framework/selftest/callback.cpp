@@ -1,5 +1,5 @@
 
-#include <tut.h>
+#include <tut/tut.hpp>
 
 #include <string>
 #include <stdexcept>
