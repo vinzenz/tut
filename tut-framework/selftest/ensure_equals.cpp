@@ -127,5 +127,68 @@ void object::test<12>()
     }
 }
 
+// helpers for test
+struct not_streamable
+{
+};
+
+template<>
+struct is_streamable<not_streamable>
+{
+    enum { value = false };
+};
+
+
+bool operator==(const not_streamable& lhs, const not_streamable& rhs)
+{
+    return true; // ensure will always succeed
+}
+
+/**
+ * Checks stream output disabled
+ */
+template<>
+template<>
+void object::test<13>()
+{
+    set_test_name("checks stream output disabled");
+    not_streamable actual, expected;
+    ensure_equals("checks stream output enabled", actual, expected); 
+}
+
+// helpers for test
+struct streamable
+{
+};
+
+template<> 
+struct is_streamable<streamable>
+{
+    enum { value = true };
+};
+
+bool operator!=(const streamable& lhs, const streamable& rhs)
+{
+    return false; // ensure_equals will always succeed
+}
+
+std::ostream&
+operator<<(std::ostream& os, const streamable& s)
+{
+    return os;
+}
+
+/**
+ * Checks stream output enabled
+ */
+template<>
+template<>
+void object::test<14>()
+{
+    set_test_name("checks stream output enabled");
+    streamable actual, expected;
+    ensure_equals("checks stream output enabled", actual, expected); 
+} 
+
 }
 

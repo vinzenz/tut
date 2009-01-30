@@ -594,6 +594,19 @@ private:
     std::string current_test_name_;
 };
 
+/**
+ * This optional feature helps to enable/disable output onto stream while
+ * instantiating function 'ensure_equals'. This may be useful for writing
+ * template tests.
+ *  
+ * If T hasn't operator<<(std::ostream&) then value should be equal false.
+ */
+template <typename T> 
+struct is_streamable
+{
+    enum { value = true };
+};
+
 namespace
 {
 
@@ -642,15 +655,44 @@ void ensure_not(const T msg, bool cond)
     ensure(msg, !cond);
 }
 
+template < bool > struct has_ostream_operator_tag
+{
+};
+
+template <typename Act, typename Exp>
+void ensure_equals_fwd(const char* msg, const Act& actual, const Exp& expected,
+    has_ostream_operator_tag<true>)
+{
+    ensure_equals_impl(msg, actual, expected);
+}
+
+template <typename Act, typename Exp>
+void ensure_equals_fwd(const char* msg, const Act& actual, const Exp& expected,
+    has_ostream_operator_tag<false>)
+{
+    ensure(msg, actual == expected);
+}
+
 /**
  * Tests two objects for being equal.
  * Throws if false.
  *
- * NB: both T and Q must have operator << defined somewhere, or
- * client code will not compile at all!
+ * NB: both Act and Exp must have operator << defined somewhere or
+ * client code should declare specialized version of is_stremable class to
+ * disable stream output. 
  */
-template <class T, class Q>
-void ensure_equals(const char* msg, const Q& actual, const T& expected)
+template <typename Act, typename Exp>
+void ensure_equals(const char* msg, const Act& actual, const Exp& expected)
+{
+    return ensure_equals_fwd(msg, actual, expected, 
+        has_ostream_operator_tag<
+            is_streamable<Act>::value != 0 &&
+            is_streamable<Exp>::value
+            >());
+}
+
+template <typename Act, typename Exp>
+void ensure_equals_impl(const char* msg, const Act& actual, const Exp& expected)
 {
     if (expected != actual)
     {
@@ -666,8 +708,8 @@ void ensure_equals(const char* msg, const Q& actual, const T& expected)
     }
 }
 
-template <class T, class Q>
-void ensure_equals(const Q& actual, const T& expected)
+template <class Act, class Exp>
+void ensure_equals(const Act& actual, const Exp& expected)
 {
     ensure_equals<>(0, actual, expected);
 }
