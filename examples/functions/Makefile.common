@@ -1,0 +1,21 @@
+TGT=example$(SFX)
+OBJS=main$(OFX) test_functions$(OFX) test_data$(OFX)
+
+HEADERS=../../tut/tut.hpp
+
+all: $(TGT)
+
+clean: 
+	$(RM) $(OBJS) $(TGT)
+
+$(TGT): $(OBJS)
+	$(LNK) $(LNKOPTS)$(TGT) $(OBJS) $(LIBS)
+
+test_functions$(OFX) : test_functions.cpp $(HEADERS)
+	$(CXX) $(CXXOPTS)test_functions$(OFX) test_functions.cpp 
+
+test_data$(OFX) : test_data.cpp $(HEADERS)
+	$(CXX) $(CXXOPTS_REF)test_data$(OFX) test_data.cpp 
+
+main$(OFX) : main.cpp  $(HEADERS)
+	$(CXX) $(CXXOPTS)main$(OFX) main.cpp 
