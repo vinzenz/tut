@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 #include <set>
-#include "tut_exception.hpp"
+#include <tut/tut_reflection.hpp>
+#include <tut/tut_exception.hpp>
 
 namespace tut
 {
@@ -99,6 +100,10 @@ private:
 typedef std::vector<std::string> groupnames;
 typedef std::set<callback*> callbacks;
 
+#if defined(TUT_USE_FUNCTIONS)  
+extern void set_reflection();
+#endif 
+
 /**
  * Test runner.
  */
@@ -112,6 +117,10 @@ public:
      */
     test_runner()
     {
+        #if defined(TUT_USE_FUNCTIONS) 
+        set_reflection();
+        tut_reflection::reflect.load();
+        #endif
     }
 
     /**

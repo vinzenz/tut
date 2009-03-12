@@ -154,6 +154,26 @@ struct rethrown : public failure
     const test_result tr;
 };
 
+/** 
+ * Exception to be throwed when pointer to function not found 
+ */
+struct no_pointer_found : public tut_error
+{
+    no_pointer_found(const std::string& msg)
+        : tut_error(msg)
+    {
+    }
+
+    test_result::result_type result() const
+    {
+        return test_result::fail;
+    }
+
+    ~no_pointer_found() throw()
+    {
+    }
+};
+
 }
 
 #endif
