@@ -1,0 +1,4 @@
+TUT=../../../..
+ARCH=x86
+include ../../../../Makefile.gcc-unix-arch
+include Makefile.common

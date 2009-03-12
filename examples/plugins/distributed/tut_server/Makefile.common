@@ -1,0 +1,22 @@
+TGT=tut_server$(SFX)
+PLUGIN=distributed
+OBJS=main$(OFX) test_functions$(OFX)
+HEADERS=../../../../tut/tut.hpp
+
+#tut server function
+TUT_SERVER_FUNCTION=__tut_server
+LIB_SERVER = $(TUT)/plugins/$(PLUGIN)/lib_tut_$(PLUGIN)_server.a
+
+all: $(TGT)
+
+clean: 
+	$(RM) $(OBJS) $(TGT)
+
+$(TGT): $(OBJS)
+	$(LNK) $(LNKOPTS)$(TGT) $(OBJS) $(LIB_SERVER) $(LIBS)
+
+test_functions$(OFX) : test_functions.cpp $(HEADERS)
+	$(CXX) $(CXXOPTS)test_functions$(OFX) test_functions.cpp 
+
+main$(OFX) : main.cpp $(HEADERS)
+	$(CXX) -DTUT_PLUGIN_SERVER=$(TUT_SERVER_FUNCTION) $(CXXOPTS)main$(OFX) main.cpp 

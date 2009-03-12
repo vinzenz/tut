@@ -2,6 +2,10 @@
 #include <tut/tut_reporter.hpp>
 #include <iostream>
 
+#if defined(TUT_PLUGIN_SERVER)
+#include <pthread.h>
+#endif
+
 using std::exception;
 using std::string;
 using std::cout;
@@ -16,14 +20,24 @@ namespace tut
 test_runner_singleton runner;
 }
 
+#if defined(TUT_PLUGIN_SERVER)
+extern void TUT_PLUGIN_SERVER();
+#endif
+
 int main(int argc, const char* argv[])
 {
+    #if defined(TUT_PLUGIN_SERVER)
+    pthread_t tut_server_pthread;
+    if( pthread_create( &tut_server_pthread, NULL, (void *(*)(void *))(TUT_PLUGIN_SERVER), NULL) )
+        cout << "\ntut warning: tut server not started\n";
+    #endif
+
     reporter visi;
 
     if (argc < 2 || argc > 3)
     {
         cout << "TUT example test application." << endl;
-        cout << "Usage: example [regression] | [list] | [ group] [test]" << endl;
+        cout << "Usage: example [regression] | [list] | [group] [test]" << endl;
         cout << "       List all groups: example list" << endl;
         cout << "       Run all tests: example regression" << endl;
         cout << "       Run one group: example std::auto_ptr" << endl;
@@ -58,7 +72,7 @@ int main(int argc, const char* argv[])
         }
         else if (argc == 3)
         {
-//            tut::runner.get().run_test(argv[1],::atoi(argv[2]));
+            tut::runner.get().run_test(argv[1],::atoi(argv[2]));
         }
     }
     catch (const exception& ex)
