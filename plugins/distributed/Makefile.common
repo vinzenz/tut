@@ -1,0 +1,28 @@
+PLUGIN=distributed
+LIB_SERVER=lib_tut_$(PLUGIN)_server
+LIB_CLIENT=lib_tut_$(PLUGIN)_client
+TUT_TRACE=tut_trace
+
+OBJS_SERVER=tut_server$(OFX)
+OBJS_CLIENT=tut_client$(OFX)
+
+HEADERS=../../tut/tut.hpp
+
+all: $(LIB_CLIENT) $(LIB_SERVER)
+
+clean: 
+	$(RM) $(OBJS_SERVER) $(OBJS_CLIENT) $(LIB_SERVER).a $(LIB_CLIENT)_$(ARCH).a
+
+$(LIB_CLIENT): $(OBJS_CLIENT)
+	$(CXX) -DTUT_PLUGIN $(CXXOPTS_PLUGIN) $(TUT_TRACE)$(OFX) $(TUT)/tut/arch/$(ARCH)/$(TUT_TRACE).cpp
+	$(AR) $(AROPTS) $(LIB_CLIENT)_$(ARCH).a $(TUT)/tut/reflection/*$(OFX) $(OBJS_CLIENT) $(TUT_TRACE)$(OFX)
+	$(RM) -f $(TUT_TRACE)$(OFX)
+
+$(LIB_SERVER): $(OBJS_SERVER)
+	$(AR) $(AROPTS) $(LIB_SERVER).a $(OBJS_SERVER)
+
+tut_server$(OFX) : tut_server.cpp $(HEADERS)
+	$(CXX) $(CXXOPTS)tut_server$(OFX) tut_server.cpp 
+
+tut_client$(OFX) : tut_client.cpp $(HEADERS)
+	$(CXX) $(CXXOPTS_PLUGIN)tut_client$(OFX) tut_client.cpp

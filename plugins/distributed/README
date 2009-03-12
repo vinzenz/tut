@@ -1,0 +1,15 @@
+Server:
+
+example cfg file: tut_server.cfg
+
+
+Client:
+How to use plugin with c++ project:
+
+add to compiling options:
+-lrt -g -finstrument-functions $(PATH_TO_TUT)/arch/$(ARCH)/lib_tut_distributed_client_$(ARCH).a
+
+in directory where you run program, should be file: tut_client.cfg with configuration
+
+example cfg file: tut_client.cfg
+
