@@ -15,11 +15,11 @@ std::vector<std::string> __x86_backtrace__()
     register void *_esp __asm__ ("esp");
     unsigned int *rfp;
 
-    for(rfp = *(unsigned int**)_ebp; rfp; rfp = *(unsigned int **)rfp)
+    for(rfp = *(unsigned int **)_ebp; rfp; rfp = *(unsigned int **)rfp)
     {
         int diff = *rfp - (unsigned int)rfp;
 
-        if( (void*)rfp < _esp || diff > 4 * 1024 || diff < 0 )
+        if( (void *)rfp < _esp || diff > 4 * 1024 || diff < 0 )
             break;
 
         result->push_back(tut::tut_reflection::get_function_name( rfp[1]-4 ));

@@ -150,7 +150,8 @@ public:
                 try {
                     kill_child_(i->first);
                 } catch(const rethrown &ex) {
-                    ss << std::endl << "child " << ex.tr.pid << " has thrown an exception: " << ex.what();
+//FIXME -> error: 'const struct tut::test_result' has no member named 'pid'
+//                    ss << std::endl << "child " << ex.tr.pid << " has thrown an exception: " << ex.what();
                 } catch(const failure &ex) {
                     ss << std::endl << ex.what();
                 }
@@ -293,7 +294,8 @@ private:
                    std::istreambuf_iterator<char>(),
                    std::back_inserter(tr.message) );
 
-        tr.pid = pid;
+//FIXME -> error: 'const struct tut::test_result' has no member named 'pid'
+//        tr.pid = pid;
 
         return tr;
     }

@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <typeinfo>
 
-#if defined(linux)
+#if !defined(TUT_USE_POSIX) && defined(linux)
 #define TUT_USE_POSIX
 #endif
 

@@ -10,6 +10,10 @@
 #include <cstring>
 #endif
 
+#if defined(TUT_USE_FUNCTIONS)
+#include "tut_function.hpp"
+#endif
+
 namespace tut
 {
 
@@ -178,6 +182,18 @@ void ensure_errno(const M& msg, bool cond)
 #endif
     }
 }
+
+#if defined(TUT_USE_FUNCTIONS) 
+/**  
+ * \brief ensure functions order 
+ * @param functions pointer to functions order object 
+ * @param mode ensure functions order by begin or end functions 
+ */
+void ensure_functions_order(functions_order *functions, function_parameters::tfmode mode = function_parameters::_FUNCTION_ENTER)
+{
+    functions_order::ensure_functions_order(functions, mode);
+}
+#endif
 
 /**
  * Unconditionally fails with message.
