@@ -1,0 +1,14 @@
+TGT=tut_trace$(SFX)
+OBJS=tut_trace$(OFX)
+
+HEADERS=../../tut.hpp
+
+all: $(TGT)
+
+clean: 
+	$(RM) $(OBJS) $(TGT)
+
+$(TGT): $(OBJS)
+
+tut_trace$(OFX) : tut_trace.cpp $(HEADERS)
+	$(CXX) -fno-strict-aliasing $(CXXOPTS)tut_trace$(OFX) tut_trace.cpp 

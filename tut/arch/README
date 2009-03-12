@@ -1,0 +1,13 @@
+template to write other architecture you can find in tut_trace.template
+Copy those file to $(ARCH)/tut_trace.cpp and then write implamentation for architecture
+
+Funcionality which should be writen:
+    - generate function_parameters for input parameters and return values
+    - run new body for function instead of original function with old parameters function
+    - use tut::tut_reflection::reflect.getMethodByPtr(reinterpret_cast<long long>(this_fn)), to know if this function should be registered
+
+(if you need some information about function (types, pointer, etc) you can use reflection information, see x86 architecutre example)
+
+g++ -S -finstrument-functions ... //for more information about how it's works :]
+
+Good luck ;)

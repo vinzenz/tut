@@ -1,0 +1,19 @@
+CHANGE: 2009-03-06
+
+- allow new classes if test exists -> reflection.allow
+- Makefile -> add -g parameter only for user classes (more speed)
+- add number of quantity tests which should be created automaticly
+- user can add to config file own files which should be copy to generated test directory | to command line also
+- generate tut_server tests or simple tut tests (command line parameters) | just other Makefile
+- add comments to cfg file (???)
+- add make install to Makefile
+- add doxygen style comments
+- repair empty tutgen.h
+- add tests (???)
+
+bugs:
+    - commas 
+        stub("Config",,Config,Config,);
+        stub("GenerateFromConfig",bool,Config,GenerateFromConfig, std::string fileIn, std::string fileOut, std::string tag, std::map< std::string, std::s
+        stub("GetValue",,Config,GetValue, std::string file, std::string value );
+        stub("PrepareDirectory",void,Config,PrepareDirectory, std::string directory );
