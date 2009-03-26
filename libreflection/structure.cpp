@@ -1,25 +1,25 @@
-#include "structure.h"
-#include "errors.h"
+#include <reflection/structure.h>
+#include <reflection/errors.h>
 
 namespace reflection {
 
-Structure::Structure(Namespace *ns, const std::string &name, const std::string &value, const std::string &sibling, const std::string &specification) : 
+Structure::Structure(Namespace *ns, const std::string &name, const std::string &value, const std::string &sibling, const std::string &specification) :
     ReflectionType(value, sibling, specification), ns(ns), name(name), byteSize(0x00)
 {}
 
-Structure::Structure(Namespace *ns, const std::string &name, const std::string &value, const std::string &sibling) : 
+Structure::Structure(Namespace *ns, const std::string &name, const std::string &value, const std::string &sibling) :
     ReflectionType(value, sibling, ""), ns(ns), name(name), byteSize(0x00)
 {}
 
-Structure::Structure(Namespace *ns, const std::string &name, const std::string &value) : 
+Structure::Structure(Namespace *ns, const std::string &name, const std::string &value) :
     ReflectionType(value, "", ""), ns(ns), name(name), byteSize(0x00)
 {}
 
-Structure::Structure(Namespace *ns, const std::string &name) : 
+Structure::Structure(Namespace *ns, const std::string &name) :
     ReflectionType("", "", ""), ns(ns), name(name), byteSize(0x00)
 {}
 
-Structure::Structure() : 
+Structure::Structure() :
     ReflectionType("", "", ""), ns(NULL), name(""), byteSize(0x00)
 {}
 
@@ -60,9 +60,9 @@ std::vector<Method *> *Structure::getMethods(unsigned short type)
 
         case _METHOD:
             if( (*method)->getType() == type )
-                result->push_back(*method); 
+                result->push_back(*method);
         break;
-        
+
         }
     }
 
@@ -159,7 +159,7 @@ std::string Inheritance::getName()
                     std::string value = "";
                     if( this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns != "" && this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns != this->getClass()->getNamespace()->getName() )
                         value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns + "::";
-                    value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name; 
+                    value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name;
 
                     this->name = value;
                 }

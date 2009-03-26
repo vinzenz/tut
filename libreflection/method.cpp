@@ -1,11 +1,11 @@
-#include "method.h"
-#include "cxxabi.h"
+#include <reflection/method.h>
+#include <cxxabi.h>
 
 namespace reflection {
 
 void *Call::ptr = NULL;
 
-Method::Method(Structure *structure, const std::string &name, const std::string &mangle, const std::string &returnType, long long ptr, unsigned int accessibility) : 
+Method::Method(Structure *structure, const std::string &name, const std::string &mangle, const std::string &returnType, long long ptr, unsigned int accessibility) :
     structure(structure), name(name), mangle(mangle), returnType(returnType), ptr(ptr), accessibility(accessibility), type(_METHOD)
 {}
 
@@ -13,11 +13,11 @@ Method::Method(Structure *structure, const std::string &name, const std::string 
     structure(structure), name(name), mangle(mangle), returnType(returnType), ptr(0x00), accessibility(accessibility), type(type)
 {}
 
-Method::Method(Structure *structure, const std::string &name, const std::string &mangle, const std::string &returnType) : 
+Method::Method(Structure *structure, const std::string &name, const std::string &mangle, const std::string &returnType) :
     structure(structure), name(name), mangle(mangle), returnType(returnType), ptr(0x00), accessibility(0x01), type(_METHOD)
 {}
 
-Method::Method(const std::string &mangle, long long ptr) : 
+Method::Method(const std::string &mangle, long long ptr) :
     structure(NULL), name(""), mangle(mangle), returnType(""), ptr(ptr), accessibility(0x01), type(_METHOD)
 {}
 
@@ -33,13 +33,13 @@ void Method::setType()
           ( this->mangle[0] == _SPECIAL_MANGLE && this->mangle.length()-1 <= (*pointer)->getMangle().length() && (*pointer)->getMangle().substr(0, this->mangle.length()-1) == this->mangle.substr(1) ) )
         {
             this->ptr = (*pointer)->getPtr();
-                        
+
             if( this->mangle[0] == _SPECIAL_MANGLE )
             {
                 this->mangle = (*pointer)->getMangle();
                 setMethodName(*pointer, this->name);
             }
-                                        
+
             break;
         }
     }
@@ -52,7 +52,7 @@ void Method::setType()
         do
         {
            unsigned int n;
-           for(n=0; n < this->getClass()->getNamespace()->getReflection()->baseTypes.size(); n++)                
+           for(n=0; n < this->getClass()->getNamespace()->getReflection()->baseTypes.size(); n++)
            if( tmp  == this->getClass()->getNamespace()->getReflection()->baseTypes[n]->value )
            {
                 if( (this->getClass()->getNamespace()->getReflection()->baseTypes[n]->pointerType == _NO_POINTER && this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name[0] != '<') ||
@@ -62,7 +62,7 @@ void Method::setType()
                     std::string value = "";
                     if( this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns != "" && this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns != this->getStructure()->getNamespace()->getName() )
                         value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns + "::";
-                    value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name; 
+                    value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name;
 
                     if( this->getClass()->getNamespace()->getReflection()->baseTypes[n]->pointerType == _IS_POINTER && this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name == _VOID_TYPE )
                         pointerType = _IS_POINTER;
@@ -78,10 +78,10 @@ void Method::setType()
                     if( this->getClass()->getNamespace()->getReflection()->baseTypes[n]->pointerType == _IS_POINTER )
                         pointerType = _IS_POINTER;
                 }
-    
+
                 break;
            }
-                        
+
            if( n >= this->getClass()->getNamespace()->getReflection()->baseTypes.size() - 1 )
                break;
 
@@ -186,7 +186,7 @@ std::string Method::getFullReturnType()
     if( !this->ptr )
         this->setType();
 
-    return 
+    return
         this->returnType[0] == '<' ? _UNKNOWN_TYPE : this->returnType;
 }
 

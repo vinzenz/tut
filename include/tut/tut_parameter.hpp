@@ -4,13 +4,13 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <tut/reflection/reflection.h>
+#include <reflection/reflection.h>
 #include <tut/tut_function.hpp>
 #include <tut/tut.hpp>
 
 namespace tut {
 
-/**  
+/**
  * \brief Keep function parameters
  * @author Krzysztof Jusiak
  * @date 03/02/2009
@@ -48,7 +48,7 @@ public:
 
 private:
 
-    /**  
+    /**
      * \brief Keep single parameter
      * @author Krzysztof Jusiak
      * @date 03/02/2009
@@ -64,21 +64,21 @@ private:
         typedef std::vector<parameter *>::iterator iterator;
 
     public:
-        parameter(const std::string &name, const std::string &type, const std::string &parent) : 
-            name(name), type(type), parent(parent), isClass(false) 
+        parameter(const std::string &name, const std::string &type, const std::string &parent) :
+            name(name), type(type), parent(parent), isClass(false)
         {}
 
-        parameter(const std::string &type, void *value) : 
+        parameter(const std::string &type, void *value) :
             name(""), type(type), parent(""), isClass(false)
         {
             this->value.push_back(value);
         }
 
-        parameter(const std::string &type, bool isClass) : 
+        parameter(const std::string &type, bool isClass) :
             name(""), type(type), parent(""), isClass(isClass)
         {}
 
-        parameter() : 
+        parameter() :
             name(""), type(""), parent(""), isClass(false)
         {}
 
@@ -86,7 +86,7 @@ private:
         const std::string &get_type() { return type; }
         void add(parameter *p) { parameters.push_back(p); }
         void add_value(void *v) { value.push_back(v); }
-        unsigned int get_size() { return parameters.size(); }    
+        unsigned int get_size() { return parameters.size(); }
         parameter *get_parameter(unsigned int pos) { return parameters[pos]; }
         void *get_value() { return value.size() > 0 ? value[value.size()-1] : NULL; }
         void *get_value(unsigned int i) { return value[i]; }
@@ -98,7 +98,7 @@ private:
         iterator end() { return parameters.end(); }
     };
 
-    /** 
+    /**
      * \brief add new parameter
      * @param type type parameter e.g. "double"
      * @param value pointer to parameter value
@@ -111,7 +111,7 @@ private:
             active->get_parameter(active->get_size()-1)->add_value(value);
     }
 
-    /** 
+    /**
      * \brief add structure parameters
      * @param structure structure class parameter
      * @param ptr pointer where structure is in memory
@@ -121,12 +121,12 @@ private:
         int pop = 0;
         for(std::vector<reflection::Member *>::iterator member = structure->getMembers()->begin(); member < structure->getMembers()->end(); member++)
         {
-            active->add( 
+            active->add(
                 new parameter((*member)->getName(), (*member)->getType() + ((*member)->getPointerType() == _IS_POINTER ? "*" : ""), (*member)->getStructure()->getName()) );
 
             *(ptr += ((*member)->getOffset() - pop) / sizeof(int *) );
-    
-            add_parameter( (*member)->getType() + ((*member)->getPointerType() == _IS_POINTER ? "*" : ""), ptr, 
+
+            add_parameter( (*member)->getType() + ((*member)->getPointerType() == _IS_POINTER ? "*" : ""), ptr,
                            (member == structure->getMembers()->end()-1 ? (*member)->getStructure()->getByteSize() : (*(member+1))->getOffset()) - (*member)->getOffset()
                          );
 

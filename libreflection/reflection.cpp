@@ -4,8 +4,8 @@
 #include <sstream>
 #include <string>
 
-#include "reflection.h"
-#include "cxxabi.h"
+#include <reflection/reflection.h>
+#include <cxxabi.h>
 
 extern const char *__progname;
 
@@ -24,7 +24,7 @@ bool Reflection::checkELF(const std::string &fileName)
     if( read(fd, &hdr, sizeof(Elf32_Ehdr) ) != sizeof(Elf32_Ehdr) )
         throw Failure(_IO_ERROR + fileName);
 
-    bool result = 
+    bool result =
        hdr.e_ident[0] == 0x7f && hdr.e_ident[1] == 'E' && hdr.e_ident[2] == 'L'  && hdr.e_ident[3] == 'F';
 
     close(fd);
@@ -50,7 +50,7 @@ Reflection::Reflection(const std::string &name, bool shortMode) : fileName(name)
 
 Reflection::~Reflection() {
     baseTypes.clear();
-    methodsPointers.clear();    
+    methodsPointers.clear();
 }
 
 void Reflection::allow(const std::string &reg)
@@ -281,12 +281,12 @@ bool Reflection::setTmpValues(const std::string &parse, std::vector<Tag> tags, i
                 }
                 else
                 {
-                    for(n=0; n < parse.length(); n++)                                
+                    for(n=0; n < parse.length(); n++)
                         if( parse[n] == ':' )
                             break;
 
                     if( n < parse.length() - 1 )
-                    {                                    
+                    {
                         int par1 = 0, par2 = 0;
                         n += 2;
 
@@ -308,10 +308,10 @@ bool Reflection::setTmpValues(const std::string &parse, std::vector<Tag> tags, i
                             if( par1 == 0 && par2 == 0 && parse[tmpN] == ':' )
                                 break;
                         }
-                                    
+
                         if( tmpN < parse.length() - 1 )
                             n = tmpN+2;
-    
+
                         name = parse.substr(n, parse.length()-n-2);
                     }
                 }
@@ -358,7 +358,7 @@ bool Reflection::isAll(std::vector<Tag> tags, int type, const std::string *tmpVa
 int Reflection::getLineNr(const std::string &parse)
 {
     size_t f1, f2;
-    
+
     f1 = parse.find_first_of('<');
     f2 = parse.find_first_of('>');
 
@@ -371,13 +371,13 @@ int Reflection::getLineNr(const std::string &parse)
 std::string Reflection::getParseValue(const std::string &parse, const std::string &name)
 {
     size_t found;
-    
+
     found = parse.find(name);
     if( found != std::string::npos )
     {
         size_t begin = parse.find_first_of('<', 2);
         size_t end = parse.find_first_of(':');
-    
+
         if( begin != std::string::npos && end != std::string::npos )
             return parse.substr(begin, end - begin);
     }
@@ -424,12 +424,12 @@ void Reflection::loadStructures(const std::string &name)
                             bool isOk = true;
                             for(unsigned int i=0; i < this->types.size(); i++)
                                 if( tmpValues[_AT_NAME] == this->types[i]->getName() )
-                                {   
+                                {
                                     isOk = false;
                                     setNamespaceSibling(this->types[i], tmpValues[_AT_SIBLING]);
                                     activeNamespace = i;
                                     break;
-                                }                                
+                                }
 
                             if( isOk == true )
                             {
@@ -463,7 +463,7 @@ void Reflection::loadStructures(const std::string &name)
                                             setStructureValues(*is, tmpValues[_AT_SIBLING], tags[type].value);
                                             setStructureByteSize(*is, (unsigned int)atoi(tmpValues[_AT_STRUCTURE_BYTE_SIZE].c_str()));
                                             end = true;
-                            
+
                                             baseTypes.push_back( new BaseType((*this->types[activeNamespace]->getTypes())[activeStructure]->getName(), tags[type].value, this->types[activeNamespace]->getName(), 0, _NO_POINTER, _NO_CONST) );
 
                                             std::vector<Structure *>::iterator is2; int n2 = 0;
@@ -472,11 +472,11 @@ void Reflection::loadStructures(const std::string &name)
                                                 if( is2 != is && (*is2)->getName() == (*is)->getName() )
                                                 {
                                                     (*ns)->getTypes()->erase(is);
-  
+
                                                     setStructureValues(*is2, tmpValues[_AT_SIBLING], tags[type].value);//you must know when change namespace to old | if this structure is end
                                                     setStructureByteSize(*is2, (unsigned int)atoi(tmpValues[_AT_STRUCTURE_BYTE_SIZE].c_str()));
                                                     activeStructure = n2;
-                                                    
+
                                                     break;
                                                 }
                                             }
@@ -509,7 +509,7 @@ void Reflection::loadStructures(const std::string &name)
                             else
                             {
                                 std::string checkValue = (types[activeNamespace]->getName() == "" ? "" : (types[activeNamespace]->getName() + "::")) + tmpValues[_AT_NAME];
-                                
+
                                 if( tmpValues[_AT_NAME] != "" && elements.check(checkValue) == true )
                                 {
                                     baseTypes.push_back( new BaseType(tmpValues[_AT_NAME], tags[type].value, this->types[activeNamespace]->getName(), 0, _NO_POINTER, _NO_CONST) );
@@ -566,9 +566,9 @@ void Reflection::loadStructures(const std::string &name)
                                     isMember = true;
                                     break;
                                 }
-                            
+
                             if( isMember == false )
-                                (*this->types[activeNamespace]->getTypes())[activeStructure]->getMembers()->push_back( 
+                                (*this->types[activeNamespace]->getTypes())[activeStructure]->getMembers()->push_back(
                                  new Member((*this->types[activeNamespace]->getTypes())[activeStructure], tmpValues[_AT_NAME], tmpValues[_AT_TYPE], (unsigned int)atoi(tmpValues[_AT_ACCESSIBILITY].c_str()), (unsigned int)atoi(tmpValues[_AT_OP_PLUS_UCONST].c_str())) );
                         }
                         else
@@ -589,11 +589,11 @@ void Reflection::loadStructures(const std::string &name)
                                         tmp << (*this->types[activeNamespace]->getTypes())[activeStructure]->getName().length();
 
                                         if( tmpValues[_AT_NAME][0] == _SPECIAL_DESTRUCTOR && tmpValues[_AT_NAME].substr(1) == (*this->types[activeNamespace]->getTypes())[activeStructure]->getName() )
-                                            (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back( 
+                                            (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back(
                                              new Method((*this->types[activeNamespace]->getTypes())[activeStructure], tmpValues[_AT_NAME], _SPECIAL_MANGLE_BEGIN + tmp.str() + tmpValues[_AT_NAME].substr(1) + _MANGLE_DESTRUCTOR, _NO_TYPE, (unsigned int)0, _DESTRUCTOR) );
                                         else
                                         if( tmpValues[_AT_NAME] == (*this->types[activeNamespace]->getTypes())[activeStructure]->getName() )
-                                            (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back( 
+                                            (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back(
                                              new Method((*this->types[activeNamespace]->getTypes())[activeStructure], tmpValues[_AT_NAME], _SPECIAL_MANGLE_BEGIN + tmp.str() + tmpValues[_AT_NAME] + _MANGLE_CONSTRUCTOR, _NO_TYPE, (unsigned int)0, _CONSTRUCTOR) );
                                     }
                                     else
@@ -605,14 +605,14 @@ void Reflection::loadStructures(const std::string &name)
                                                 isMethod = true;
                                                 break;
                                             }
-                                    
+
                                         if( isMethod == false )
-                                        {                    
+                                        {
                                             if( tmpValues[_AT_TYPE] == "" )//void method
-                                                (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back( 
+                                                (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back(
                                                  new Method((*this->types[activeNamespace]->getTypes())[activeStructure], tmpValues[_AT_NAME], tmpValues[_AT_MIPS_LINKAGE_NAME], _VOID_TYPE, (unsigned int)atoi(tmpValues[_AT_ACCESSIBILITY].c_str()), _METHOD) );
                                             else
-                                                (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back( 
+                                                (*this->types[activeNamespace]->getTypes())[activeStructure]->getMethods()->push_back(
                                                  new Method((*this->types[activeNamespace]->getTypes())[activeStructure], tmpValues[_AT_NAME], tmpValues[_AT_MIPS_LINKAGE_NAME], tmpValues[_AT_TYPE], (unsigned int)atoi(tmpValues[_AT_ACCESSIBILITY].c_str()), _METHOD) );
                                         }
                                     }
@@ -627,14 +627,14 @@ void Reflection::loadStructures(const std::string &name)
                                                 isMethod = true;
                                                 break;
                                             }
-                                    
+
                                         if( isMethod == false )
-                                        {                    
+                                        {
                                             if( tmpValues[_AT_TYPE] == "" )//void method
-                                                (*this->types[activeNamespace]->getTypes())[0]->getMethods()->push_back( 
+                                                (*this->types[activeNamespace]->getTypes())[0]->getMethods()->push_back(
                                                  new Method((*this->types[activeNamespace]->getTypes())[0], tmpValues[_AT_NAME], tmpValues[_AT_MIPS_LINKAGE_NAME], _VOID_TYPE, (unsigned int)atoi(tmpValues[_AT_ACCESSIBILITY].c_str()), _METHOD) );
                                             else
-                                                (*this->types[activeNamespace]->getTypes())[0]->getMethods()->push_back( 
+                                                (*this->types[activeNamespace]->getTypes())[0]->getMethods()->push_back(
                                                  new Method((*this->types[activeNamespace]->getTypes())[0], tmpValues[_AT_NAME], tmpValues[_AT_MIPS_LINKAGE_NAME], tmpValues[_AT_TYPE], (unsigned int)atoi(tmpValues[_AT_ACCESSIBILITY].c_str()), _METHOD) );
                                         }
                                 }
@@ -664,7 +664,7 @@ void Reflection::loadStructures(const std::string &name)
                             baseTypes.push_back( new BaseType(tmpValues[_AT_NAME], tags[type].value, "", 0, _NO_POINTER, _NO_CONST) );
                         }
                         else
-                        if( 
+                        if(
                             tags[type].name == _DW_TAG_TYPEDEF          ||
                             tags[type].name == _DW_TAG_REFERENCE_TYPE   ||
                             tags[type].name == _DW_TAG_SUBROUTINE_TYPE  ||
@@ -701,7 +701,7 @@ void Reflection::loadStructures(const std::string &name)
                             activeStructure = -1;
                             if( oldActiveNamespace != -1 )
                                 { activeNamespace = oldActiveNamespace; oldActiveNamespace = -1; }
-                            activeNr = -1; 
+                            activeNr = -1;
                             structureNr = -1;
                         }
                     }
@@ -825,21 +825,21 @@ std::string Reflection::toString(tshow type)
         for(structure = (*_namespace)->getTypes()->begin(); structure < (*_namespace)->getTypes()->end(); structure++)
         {
             result << "\t" << (*structure)->getName();
-            if( type & _SHOW_SIZE ) 
+            if( type & _SHOW_SIZE )
                 result << " <" << (*structure)->getByteSize() << ">";
             result << std::endl;
 
             if( (*structure)->getInheritances()->size() > 0 )
             {
-                if( type & _SHOW_TEXT ) 
+                if( type & _SHOW_TEXT )
                     result << "\t\t\t" << "Inheritances:";
                 result << std::endl;
-            
+
                 std::vector<Inheritance *>::iterator inh;
                 for(inh = (*structure)->getInheritances()->begin(); inh < (*structure)->getInheritances()->end(); inh++)
                 {
                       result << "\t\t\t\t" << (*inh)->getName();
-                      if( type & _SHOW_OFFSET ) 
+                      if( type & _SHOW_OFFSET )
                         result << " [" << (*inh)->getOffset() << "]";
                       result << std::endl;
                 }
@@ -852,11 +852,11 @@ std::string Reflection::toString(tshow type)
                 {
                     result << "\t\t\t";
 
-                    switch( (*member)->getAccessibility() )    
+                    switch( (*member)->getAccessibility() )
                     {
                     case _PUBLIC:
                         result << "public "; break;
-    
+
                     case _PROTECTED:
                         result << "protected "; break;
 
@@ -875,7 +875,7 @@ std::string Reflection::toString(tshow type)
                     result << (*member)->getName();
                     if( type & _SHOW_OFFSET )
                         result << " [" << (*member)->getOffset() << "]";
-                    if( type & _SHOW_SIZE ) 
+                    if( type & _SHOW_SIZE )
                         result << " <" << (*member)->getByteSize() << ">";
                     result << std::endl;
                 }
@@ -888,7 +888,7 @@ std::string Reflection::toString(tshow type)
                 {
                     result << "\t\t\t";
 
-                    switch( (*method)->getAccessibility() )    
+                    switch( (*method)->getAccessibility() )
                     {
                     case _PUBLIC:
                         result << "public "; break;
@@ -908,7 +908,7 @@ std::string Reflection::toString(tshow type)
                     if( type & _SHOW_POINTER )
                         result << " [" << (*method)->getPtr() << "]";
                     result << std::endl;
-                  
+
                     if( type & _SHOW_PARAMETER )
                         for(unsigned int i=0; i < (*method)->getParameters()->size(); i++)
                             result << "\t\t\t\t" << i+1 << ". " << (*(*method)->getParameters())[i] << std::endl;
@@ -947,7 +947,7 @@ std::string getShortType(std::string type)
         return result;
     }
 
-    return type;    
+    return type;
 }
 
 std::string trim(const std::string &text)
@@ -965,7 +965,7 @@ std::string replaceAll(const std::string &s, const std::string &f, const std::st
 {
     if( s.empty() || f.empty() || f == r || s.find(f) == std::string::npos )
         return s;
-    
+
     std::ostringstream build_it;
     size_t i = 0;
 
@@ -975,10 +975,10 @@ std::string replaceAll(const std::string &s, const std::string &f, const std::st
         build_it << r;
         i = pos + f.size();
     }
-    
+
     if( i != s.size() )
         build_it.write( &s[i], s.size() - i );
- 
+
     return build_it.str();
 }
 

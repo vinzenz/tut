@@ -1,12 +1,12 @@
-#include "member.h"
+#include <reflection/member.h>
 
 namespace reflection {
 
-Member::Member(Structure *structure, const std::string &name, const std::string &type, unsigned int accessibility, unsigned int offset) : 
+Member::Member(Structure *structure, const std::string &name, const std::string &type, unsigned int accessibility, unsigned int offset) :
     structure(structure), name(name), type(type), accessibility(accessibility), offset(offset)
 {}
 
-Member::Member(Structure *structure, const std::string &name) : 
+Member::Member(Structure *structure, const std::string &name) :
     structure(structure), name(name), type(""), accessibility(0x01), offset(0x00), byteSize(0x00), pointerType(_NO_POINTER), constType(_NO_CONST)
 {}
 
@@ -29,7 +29,7 @@ void Member::setType()
                     std::string value = "";
                     if( this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns != "" && this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns != this->getStructure()->getNamespace()->getName() )
                         value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->ns + "::";
-                    value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name; 
+                    value += this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name;
 
                     setValues(value, pointerType == _IS_POINTER ? _POINTER_SIZE : this->getClass()->getNamespace()->getReflection()->baseTypes[n]->byteSize, pointerType, constType);
                     isOk = true;
@@ -37,17 +37,17 @@ void Member::setType()
                 else
                 {
                     tmp = this->getClass()->getNamespace()->getReflection()->baseTypes[n]->name;
-        
+
                     if( this->getClass()->getNamespace()->getReflection()->baseTypes[n]->pointerType == _IS_POINTER )
                         pointerType = _IS_POINTER;
 
                     if( this->getClass()->getNamespace()->getReflection()->baseTypes[n]->constType == _IS_CONST )
                         constType = _IS_CONST;
                 }
-    
+
                 break;
             }
-                    
+
             if( n >= this->getClass()->getNamespace()->getReflection()->baseTypes.size() - 1 )
                 break;
 

@@ -1,0 +1,17 @@
+FILE(GLOB libreflection_FILES "*.cpp")
+
+# Simple arch detection
+IF(${CMAKE_CXX_SIZEOF_DATA_PTR} EQUAL 4)
+SET(CMAKE_SYSTEM_ARCH x86)
+ELSEIF(${CMAKE_CXX_SIZEOF_DATA_PTR} EQUAL 8)
+SET(CMAKE_SYSTEM_ARCH x86_64)
+ELSE(${CMAKE_CXX_SIZEOF_DATA_PTR} EQUAL 8)
+MESSAGE(FATAL_ERROR "Unknown architecture!")
+ENDIF(${CMAKE_CXX_SIZEOF_DATA_PTR} EQUAL 4)
+
+MESSAGE(STATUS "Configuring for ${CMAKE_SYSTEM_ARCH}")
+FILE(GLOB libreflection_arch_FILES "arch/${CMAKE_SYSTEM_ARCH}/*.cpp")
+
+ADD_LIBRARY(libreflection ${libreflection_FILES} ${libreflection_arch_FILES})
+
+

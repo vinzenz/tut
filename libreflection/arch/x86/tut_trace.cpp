@@ -10,8 +10,8 @@
 
 #include <tut/tut_reflection.hpp>
 #include <tut/tut_function.hpp>
-#include <tut/arch/x86/tut_extend.hpp>
-#include <tut/arch/x86/tut_trace.hpp>
+#include "tut_extend.hpp"
+#include "tut_trace.hpp"
 
 #if defined(TUT_PLUGIN)
 #include <tut/tut_plugin.hpp>
@@ -19,10 +19,10 @@
 
 #define _ARCH_X86   ///information about witch architecture is use
 
-/**   
+/**
  * \brief X86 architecture for tut functions extend
  * @author Krzysztof Jusiak
- * @date 03/02/2009 
+ * @date 03/02/2009
  */
 
 #ifdef __cplusplus
@@ -30,7 +30,7 @@ extern "C"
 {
     void __cyg_profile_func_enter(void *this_fn, void *call_site)
     __attribute__((no_instrument_function));
-    
+
     void __cyg_profile_func_exit(void *this_fn, void *call_site)
     __attribute__((no_instrument_function));
 }
@@ -71,7 +71,7 @@ static timespec __function_run_time;                    ///function executed tim
 
 
 #if defined(TUT_PLUGIN)
-/** 
+/**
  * \brief debug output
  * this function is used to show local debug information
  * @param mode function enter or exit
@@ -83,12 +83,12 @@ void __debug_output(tut::function_parameters::tfmode mode, const std::string &na
     if( __plugin.options & tut_plugin::_OPTION_SHOW_NAMES )
         complete += "[" + name + "]";
     complete += ((showParenthesis == true || (showParenthesis == false && (__plugin.options & tut_plugin::_OPTION_SHOW_NAMES)) )
-                ? "[" : "") + text + 
-                ((showParenthesis == true || (showParenthesis == false && (__plugin.options & tut_plugin::_OPTION_SHOW_NAMES)) ) 
+                ? "[" : "") + text +
+                ((showParenthesis == true || (showParenthesis == false && (__plugin.options & tut_plugin::_OPTION_SHOW_NAMES)) )
                 ? "]" : "");
 
     if( ( (mode == tut::function_parameters::_FUNCTION_ENTER) && ((__plugin.options & tut_plugin::_OPTION_FUNC_MODE_ENTER) != 0 )) ||
-        ( (mode == tut::function_parameters::_FUNCTION_EXIT) && ((__plugin.options & tut_plugin::_OPTION_FUNC_MODE_EXIT) != 0 )) || 
+        ( (mode == tut::function_parameters::_FUNCTION_EXIT) && ((__plugin.options & tut_plugin::_OPTION_FUNC_MODE_EXIT) != 0 )) ||
           !mode
       )
     {
@@ -100,7 +100,7 @@ void __debug_output(tut::function_parameters::tfmode mode, const std::string &na
     }
 }
 
-/** 
+/**
  * \brief on first function
  * this function do all stuff which are in init() and init_reflection() functions
  */
@@ -117,10 +117,10 @@ void __on_first_function() {
         if( __plugin.options & tut_plugin::_OPTION_SHOW_WARNINGS )
             __debug_output(tut::function_parameters::_FUNCTION_ENTER, _NAME_WARNING, e.what() );
     }
-}   
+}
 #endif
 
-/** 
+/**
  * \brief on function enter
  * this function do all stuff before original function will be called
  * @param this_fn function which was executed
@@ -272,7 +272,7 @@ void __cyg_profile_func_enter(void *this_fn, void *call_site)
     }
 }
 
-/** 
+/**
  * \brief on function exit
   * this function do all stuff after original function was called
  * @param this_fn function which was executed
@@ -295,7 +295,7 @@ void __cyg_profile_func_exit(void *this_fn, void *call_site)
     if( (__no_instrument_function == true && __new_body_tackle_return == false) || (this_fn == __tmp_run && __new_body_tackle_return == false) )
         return;
 
-    int *parameters_ptr; 
+    int *parameters_ptr;
     __x86_get_register_value__(__x86_ebx__, parameters_ptr);
 
     if( __new_body_tackle_return == true )

@@ -1,12 +1,12 @@
-#include "namespace.h"
+#include <reflection/namespace.h>
 
 namespace reflection {
 
-Namespace::Namespace(Namespace *parent, Reflection *reflection, const std::string &name) : 
+Namespace::Namespace(Namespace *parent, Reflection *reflection, const std::string &name) :
     ReflectionType(""), parent(parent), reflection(reflection), name(name)
 {}
 
-Namespace::Namespace(Namespace *parent, Reflection *reflection, const std::string &name, const std::string &sibling) : 
+Namespace::Namespace(Namespace *parent, Reflection *reflection, const std::string &name, const std::string &sibling) :
     ReflectionType(sibling), parent(parent), reflection(reflection), name(name)
 {}
 
