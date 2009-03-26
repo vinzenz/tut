@@ -4,15 +4,15 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
-#include <string> 
+#include <string>
 #include <sstream>
 #include <stdio.h>
 #include <tut/tut_exception.hpp>
-#include <tut/reflection/reflection.h>
+#include <reflection/reflection.h>
 
 namespace tut {
 
-/** 
+/**
  * \brief TUT reflection
  * @author Krzysztof Jusiak
  * @date 03/02/2009
@@ -29,9 +29,9 @@ class tut_reflection
     #define __invoke(function_ptr, ...)\
         ((tut::tut_reflection::reflect.getMethodByPtr(reinterpret_cast<long long>(function_ptr)))->getStructure()->getName() != _NO_STRUCTURE) ?\
             _invoke(function_ptr, tut::tut_reflection::_this, __VA_ARGS__) : _invoke(function_ptr, __VA_ARGS__)
-                                                 
+
     /**
-     * macro to invoke function by her pointer with parameters 
+     * macro to invoke function by her pointer with parameters
      * and define return type
      *
      * example:
@@ -40,7 +40,7 @@ class tut_reflection
     #define __invoke_set_return(function_ptr, return_type, ...)\
         ((tut::tut_reflection::reflect.getMethodByPtr(reinterpret_cast<long long>(function_ptr)))->getStructure()->getName() != _NO_STRUCTURE) ?\
             _invokeSetReturn(function_ptr, return_type, tut::tut_reflection::_this, __VA_ARGS__) : _invokeSetReturn(function_ptr, return_type, __VA_ARGS__);
-                                                 
+
     /**
      * macro to set value object values (values could be private etc)
      *
@@ -63,7 +63,7 @@ class tut_reflection
      */
     #define __set_value_ns(object, namespace, class, member, value)\
         tut::tut_reflection::reflect.getNamespace(namespace)->getClass(class)->getMember(member)->setValue(object, value);
-            
+
     /**
      * macro to get get object values (values could be private etc)
      *
@@ -129,11 +129,11 @@ public:
                             break;
                         }
                     }
-    
+
                     if( i < tmp.length() - 1 )
                         if( tmp[i] != '('  )
                             ok = false;
-                    
+
                     if( ok == true )
                         break;
                 }
