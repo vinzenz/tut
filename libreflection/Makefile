@@ -57,6 +57,47 @@ edit_cache:
 edit_cache/fast: edit_cache
 .PHONY : edit_cache/fast
 
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: install/local
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: install/strip
+.PHONY : install/strip/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -99,25 +140,25 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-libreflection/CMakeFiles/libreflection.dir/rule:
-	cd /home/rzechone/progs/tut && $(MAKE) -f CMakeFiles/Makefile2 libreflection/CMakeFiles/libreflection.dir/rule
-.PHONY : libreflection/CMakeFiles/libreflection.dir/rule
+libreflection/CMakeFiles/reflection.dir/rule:
+	cd /home/rzechone/progs/tut && $(MAKE) -f CMakeFiles/Makefile2 libreflection/CMakeFiles/reflection.dir/rule
+.PHONY : libreflection/CMakeFiles/reflection.dir/rule
 
 # Convenience name for target.
-libreflection: libreflection/CMakeFiles/libreflection.dir/rule
-.PHONY : libreflection
+reflection: libreflection/CMakeFiles/reflection.dir/rule
+.PHONY : reflection
 
 # fast build rule for target.
-libreflection/fast:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/build
-.PHONY : libreflection/fast
+reflection/fast:
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/build
+.PHONY : reflection/fast
 
 arch/x86/tut_trace.o: arch/x86/tut_trace.cpp.o
 .PHONY : arch/x86/tut_trace.o
 
 # target to build an object file
 arch/x86/tut_trace.cpp.o:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/arch/x86/tut_trace.cpp.o
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/arch/x86/tut_trace.cpp.o
 .PHONY : arch/x86/tut_trace.cpp.o
 
 arch/x86/tut_trace.i: arch/x86/tut_trace.cpp.i
@@ -125,7 +166,7 @@ arch/x86/tut_trace.i: arch/x86/tut_trace.cpp.i
 
 # target to preprocess a source file
 arch/x86/tut_trace.cpp.i:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/arch/x86/tut_trace.cpp.i
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/arch/x86/tut_trace.cpp.i
 .PHONY : arch/x86/tut_trace.cpp.i
 
 arch/x86/tut_trace.s: arch/x86/tut_trace.cpp.s
@@ -133,7 +174,7 @@ arch/x86/tut_trace.s: arch/x86/tut_trace.cpp.s
 
 # target to generate assembly for a file
 arch/x86/tut_trace.cpp.s:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/arch/x86/tut_trace.cpp.s
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/arch/x86/tut_trace.cpp.s
 .PHONY : arch/x86/tut_trace.cpp.s
 
 errors.o: errors.cpp.o
@@ -141,7 +182,7 @@ errors.o: errors.cpp.o
 
 # target to build an object file
 errors.cpp.o:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/errors.cpp.o
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/errors.cpp.o
 .PHONY : errors.cpp.o
 
 errors.i: errors.cpp.i
@@ -149,7 +190,7 @@ errors.i: errors.cpp.i
 
 # target to preprocess a source file
 errors.cpp.i:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/errors.cpp.i
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/errors.cpp.i
 .PHONY : errors.cpp.i
 
 errors.s: errors.cpp.s
@@ -157,7 +198,7 @@ errors.s: errors.cpp.s
 
 # target to generate assembly for a file
 errors.cpp.s:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/errors.cpp.s
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/errors.cpp.s
 .PHONY : errors.cpp.s
 
 member.o: member.cpp.o
@@ -165,7 +206,7 @@ member.o: member.cpp.o
 
 # target to build an object file
 member.cpp.o:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/member.cpp.o
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/member.cpp.o
 .PHONY : member.cpp.o
 
 member.i: member.cpp.i
@@ -173,7 +214,7 @@ member.i: member.cpp.i
 
 # target to preprocess a source file
 member.cpp.i:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/member.cpp.i
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/member.cpp.i
 .PHONY : member.cpp.i
 
 member.s: member.cpp.s
@@ -181,7 +222,7 @@ member.s: member.cpp.s
 
 # target to generate assembly for a file
 member.cpp.s:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/member.cpp.s
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/member.cpp.s
 .PHONY : member.cpp.s
 
 method.o: method.cpp.o
@@ -189,7 +230,7 @@ method.o: method.cpp.o
 
 # target to build an object file
 method.cpp.o:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/method.cpp.o
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/method.cpp.o
 .PHONY : method.cpp.o
 
 method.i: method.cpp.i
@@ -197,7 +238,7 @@ method.i: method.cpp.i
 
 # target to preprocess a source file
 method.cpp.i:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/method.cpp.i
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/method.cpp.i
 .PHONY : method.cpp.i
 
 method.s: method.cpp.s
@@ -205,7 +246,7 @@ method.s: method.cpp.s
 
 # target to generate assembly for a file
 method.cpp.s:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/method.cpp.s
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/method.cpp.s
 .PHONY : method.cpp.s
 
 namespace.o: namespace.cpp.o
@@ -213,7 +254,7 @@ namespace.o: namespace.cpp.o
 
 # target to build an object file
 namespace.cpp.o:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/namespace.cpp.o
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/namespace.cpp.o
 .PHONY : namespace.cpp.o
 
 namespace.i: namespace.cpp.i
@@ -221,7 +262,7 @@ namespace.i: namespace.cpp.i
 
 # target to preprocess a source file
 namespace.cpp.i:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/namespace.cpp.i
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/namespace.cpp.i
 .PHONY : namespace.cpp.i
 
 namespace.s: namespace.cpp.s
@@ -229,7 +270,7 @@ namespace.s: namespace.cpp.s
 
 # target to generate assembly for a file
 namespace.cpp.s:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/namespace.cpp.s
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/namespace.cpp.s
 .PHONY : namespace.cpp.s
 
 reflection.o: reflection.cpp.o
@@ -237,7 +278,7 @@ reflection.o: reflection.cpp.o
 
 # target to build an object file
 reflection.cpp.o:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/reflection.cpp.o
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/reflection.cpp.o
 .PHONY : reflection.cpp.o
 
 reflection.i: reflection.cpp.i
@@ -245,7 +286,7 @@ reflection.i: reflection.cpp.i
 
 # target to preprocess a source file
 reflection.cpp.i:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/reflection.cpp.i
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/reflection.cpp.i
 .PHONY : reflection.cpp.i
 
 reflection.s: reflection.cpp.s
@@ -253,7 +294,7 @@ reflection.s: reflection.cpp.s
 
 # target to generate assembly for a file
 reflection.cpp.s:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/reflection.cpp.s
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/reflection.cpp.s
 .PHONY : reflection.cpp.s
 
 structure.o: structure.cpp.o
@@ -261,7 +302,7 @@ structure.o: structure.cpp.o
 
 # target to build an object file
 structure.cpp.o:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/structure.cpp.o
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/structure.cpp.o
 .PHONY : structure.cpp.o
 
 structure.i: structure.cpp.i
@@ -269,7 +310,7 @@ structure.i: structure.cpp.i
 
 # target to preprocess a source file
 structure.cpp.i:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/structure.cpp.i
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/structure.cpp.i
 .PHONY : structure.cpp.i
 
 structure.s: structure.cpp.s
@@ -277,7 +318,7 @@ structure.s: structure.cpp.s
 
 # target to generate assembly for a file
 structure.cpp.s:
-	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/libreflection.dir/build.make libreflection/CMakeFiles/libreflection.dir/structure.cpp.s
+	cd /home/rzechone/progs/tut && $(MAKE) -f libreflection/CMakeFiles/reflection.dir/build.make libreflection/CMakeFiles/reflection.dir/structure.cpp.s
 .PHONY : structure.cpp.s
 
 # Help Target
@@ -287,8 +328,12 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
-	@echo "... libreflection"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... reflection"
 	@echo "... arch/x86/tut_trace.o"
 	@echo "... arch/x86/tut_trace.i"
 	@echo "... arch/x86/tut_trace.s"

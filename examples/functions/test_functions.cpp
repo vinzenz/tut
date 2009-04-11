@@ -1,4 +1,5 @@
 #include <tut/tut.hpp>
+#include <tut/tut_function.hpp>
 
 #include "test_data.hpp"
 
@@ -6,11 +7,11 @@ namespace tut {
 
 
 
-class Test 
+class Test
 {
 public:
        Test() {};
-       int MethodToStub(int a,int b,int c);      
+       int MethodToStub(int a,int b,int c);
 };
 //stub("M",int,Test,MethodToStub,int,int,int);
 
@@ -46,7 +47,7 @@ void object::test<1>()
 }
 
 /**
- * Checks 
+ * Checks
  */
 template<>
 template<>
@@ -72,7 +73,7 @@ void object::test<2>()
 }
 
 /**
- * Checks 
+ * Checks
  */
 template<>
 template<>
@@ -86,7 +87,7 @@ void object::test<3>()
             {
                 //std::cout << "NEW BODY FUNCTION" << std::endl;
                 __set_value(get_this, "test_data", "int_var", 123); //setting private value in new body function for old object
-            }   
+            }
         );
 
 
@@ -101,14 +102,14 @@ void object::test<3>()
 }
 
 /**
- * Checks 
+ * Checks
  */
 template<>
 template<>
 void object::test<4>()
 {
     tut_functions functions;
-    
+
     struct _tmp
     {
         static void my_show(function_parameters *)
@@ -145,7 +146,7 @@ template<>
 void object::test<5>()
 {
     tut_functions functions;
-    
+
     __set_body_times(functions.body, double_test, get_pointer(&test_data::double_test),
             double double_test(double a, int b)
             {
@@ -181,7 +182,7 @@ void object::test<6>()
     };
 
     functions.body->set( get_pointer(&test_data::double_test), get_pointer(&_class::function) );
-    
+
     std::cout << std::endl;
     functions.order->start_registering();
     test_data t_f;

@@ -3,10 +3,10 @@
 void test_data::private_func()
 {
 }
-        
+
 void test_data::change_var(int new_var)
 {
-    private_func();
+//    private_func();
     this->int_var = new_var;
 }
 

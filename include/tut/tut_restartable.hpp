@@ -289,7 +289,7 @@ public:
                     }
                     register_test_(tr);
                 }
-                catch (const tut::beyond_last_test&)
+                catch (const tut::no_such_group&)
                 {
                     break;
                 }

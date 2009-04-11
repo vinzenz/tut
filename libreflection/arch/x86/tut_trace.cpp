@@ -45,7 +45,7 @@ std::vector<unsigned int> functions_order::__time_functions_execute;
 void *functions_order::__start_registering = NULL;
 void *functions_order::__end_registering = NULL;
 std::vector<functions_body::set_function *> functions_body::__set_functions;
-void *tut_functions::__show_parameters_function = (void *)0xaa;
+void *tut_functions::__show_parameters_function = NULL;
 void *tut_functions::__register_function;
 bool tut_functions::__first = true;
 void *tut_reflection::_this = NULL;
@@ -78,14 +78,11 @@ static timespec __function_run_time;                    ///function executed tim
  * @param name what will be writen as value header
  * @param text result to write
  */
-void __debug_output(tut::function_parameters::tfmode mode, const std::string &name, const std::string &text, bool showParenthesis = true) {
+void __debug_output(tut::function_parameters::tfmode mode, const std::string &name, const std::string &text) {
     std::string complete = "";
     if( __plugin.options & tut_plugin::_OPTION_SHOW_NAMES )
         complete += "[" + name + "]";
-    complete += ((showParenthesis == true || (showParenthesis == false && (__plugin.options & tut_plugin::_OPTION_SHOW_NAMES)) )
-                ? "[" : "") + text +
-                ((showParenthesis == true || (showParenthesis == false && (__plugin.options & tut_plugin::_OPTION_SHOW_NAMES)) )
-                ? "]" : "");
+    complete += "[" + text + "]";
 
     if( ( (mode == tut::function_parameters::_FUNCTION_ENTER) && ((__plugin.options & tut_plugin::_OPTION_FUNC_MODE_ENTER) != 0 )) ||
         ( (mode == tut::function_parameters::_FUNCTION_EXIT) && ((__plugin.options & tut_plugin::_OPTION_FUNC_MODE_EXIT) != 0 )) ||
@@ -159,6 +156,7 @@ void __cyg_profile_func_enter(void *this_fn, void *call_site)
         __debug_output(tut::function_parameters::_FUNCTION_ENTER, _NAME_FUNCTION, "enter: " + ptr.str());
     }
 #endif
+
     if( __reg == true )
     {
         __no_instrument_function = true;
@@ -216,17 +214,13 @@ void __cyg_profile_func_enter(void *this_fn, void *call_site)
 
                 if( __plugin.debug & tut_plugin::_DEBUG_FUNC_PARAMETERS )
                     __debug_output(tut::function_parameters::_FUNCTION_ENTER, _NAME_FUNC_PARAMETER,
-                        ((std::string (*)(tut::function_parameters *))tut::tut_functions::__show_parameters_function)(func_parameters), false);
-
-                if( !(__plugin.options & tut_plugin::_OPTION_NO_SEND) )
-                {
-                    try {
-                        __plugin.send(func_parameters);
-                    }
-                    catch(std::exception &e) {
-                        if( __plugin.options & tut_plugin::_OPTION_SHOW_WARNINGS )
-                            __debug_output(tut::function_parameters::_FUNCTION_ENTER, _NAME_WARNING, e.what() );
-                    }
+                        ((std::string (*)(tut::function_parameters *))tut::tut_functions::__show_parameters_function)(func_parameters));
+                try {
+                    __plugin.send(func_parameters);
+                }
+                catch(std::exception &e) {
+                    if( __plugin.options & tut_plugin::_OPTION_SHOW_WARNINGS )
+                        __debug_output(tut::function_parameters::_FUNCTION_ENTER, _NAME_WARNING, e.what() );
                 }
             #endif
 
@@ -296,7 +290,8 @@ void __cyg_profile_func_exit(void *this_fn, void *call_site)
         return;
 
     int *parameters_ptr;
-    __x86_get_register_value__(__x86_ebx__, parameters_ptr);
+    __asm__ __volatile__("" : "=b" (parameters_ptr));
+    //__x86_get_register_value__(__x86_ebx__, parameters_ptr);
 
     if( __new_body_tackle_return == true )
     {
@@ -338,17 +333,13 @@ void __cyg_profile_func_exit(void *this_fn, void *call_site)
 
                 if( __plugin.debug & tut_plugin::_DEBUG_FUNC_PARAMETERS )
                     __debug_output(tut::function_parameters::_FUNCTION_EXIT, _NAME_FUNC_PARAMETER,
-                        ((std::string (*)(tut::function_parameters *))tut::tut_functions::__show_parameters_function)(func_parameters), false);
-
-                if( !(__plugin.options & tut_plugin::_OPTION_NO_SEND) )
-                {
-                    try {
-                        __plugin.send(func_parameters);
-                    }
-                    catch(std::exception &e) {
-                        if( __plugin.options & tut_plugin::_OPTION_SHOW_WARNINGS )
-                            __debug_output(tut::function_parameters::_FUNCTION_EXIT, _NAME_WARNING, e.what() );
-                    }
+                        ((std::string (*)(tut::function_parameters *))tut::tut_functions::__show_parameters_function)(func_parameters));
+                try {
+                    __plugin.send(func_parameters);
+                }
+                catch(std::exception &e) {
+                    if( __plugin.options & tut_plugin::_OPTION_SHOW_WARNINGS )
+                        __debug_output(tut::function_parameters::_FUNCTION_EXIT, _NAME_WARNING, e.what() );
                 }
             #endif
 

@@ -57,8 +57,9 @@ int main(int argc, const char* argv[])
             tut::runner.get().run_tests(argv[1]);
         }
         else if (argc == 3)
-        {
-            tut::runner.get().run_test(argv[1],::atoi(argv[2]));
+        { 
+            tut::test_result tr;
+            tut::runner.get().run_test(argv[1],::atoi(argv[2]),tr);
         }
     }
     catch (const exception& ex)

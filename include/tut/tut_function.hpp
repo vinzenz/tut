@@ -22,9 +22,9 @@
 
 /**
  * macro to get pointer for any function
- * use this one when you want pointer to private method 
+ * use this one when you want pointer to private method
  * or overloading method, ... (if get_pointer don't works)
- * you can use get_private for every function which 
+ * you can use get_private for every function which
  * pointer you can get by get_pointer macro
  *
  * example:
@@ -37,16 +37,16 @@
 
 namespace tut {
 
-/**  
- * \brief Keep functions executions order 
+/**
+ * \brief Keep functions executions order
  * @author Krzysztof Jusiak
  * @date 03/02/2009
  */
 class functions_order
 {
 public:
-    enum tshow_mode { 
-        _SHOW_MODE_NAME                     = 0x01, 
+    enum tshow_mode {
+        _SHOW_MODE_NAME                     = 0x01,
         _SHOW_MODE_POINTER                  = 0x02,
         _SHOW_MODE_TIME                     = 0x04,
         _SHOW_MODE_DEFAULT                  = (_SHOW_MODE_NAME | _SHOW_MODE_TIME),
@@ -55,7 +55,7 @@ public:
 
     #define _ANY_FUNCTION                   (void *)0
     #define _ANY_FUNCTIONS                  (void *)-1
-    
+
     struct function_order {
         std::vector<void *> __expected_functions_ptrs_on_enter;     ///keep expected functions pointers on enter to function
         std::vector<void *> __expected_functions_ptrs_on_exit;      ///keep expected functions pointers on exit for function
@@ -71,7 +71,7 @@ private:
     std::vector<function_order *> order;                            ///keep user declared order (expected)
     tshow_mode showMode;                                            ///how to show results, see tshow_mode
 
-    /** 
+    /**
      * \brief have declared any functions in expected functions
      * @param expBegin begin of vector to verify
      * @param exEnd end of vector to verify
@@ -86,7 +86,7 @@ private:
         return false;
     }
 
-    /** 
+    /**
      * \brief compare if vectors have 'the same' functions includes specially any functions
      * @param expBegin begin of expected vector to compare
      * @param exEnd end of expected vector to compare
@@ -99,7 +99,7 @@ private:
     {
         if( (expEnd - expBegin != gotEnd - gotBegin) && have_ANY_FUNCTIONS(expBegin, expEnd) == false )
     	    return false;
-	    
+	
         bool anyState = false, first = true;
         for(; expBegin != expEnd, gotBegin != gotEnd; gotBegin++)
         {
@@ -166,44 +166,44 @@ public:
         {
 	    case function_parameters::_FUNCTION_ENTER:
             order[order.size()-1]->__expected_functions_ptrs_on_enter.push_back(function); break;
-	    
+	
    	    case function_parameters::_FUNCTION_EXIT:
             order[order.size()-1]->__expected_functions_ptrs_on_exit.push_back(function); break;
-		    
+		
    	    case function_parameters::_FUNCTION_START_REGISTERING:
             functions_order::__start_registering = function; break;
-		    
+		
         case function_parameters::_FUNCTION_END_REGISTERING:
 	        functions_order::__end_registering = function; break;
         }
     }
 
-    /** 
+    /**
      * \brief overload method to add the same function couple times
      * you can use also here any_function, any_functions
      * @param function pointer to function
      * @param count how many times
      * @param mode registering mode (registergin begin or end of functions)
-     */    
+     */
     void add(void *function, unsigned int count, function_parameters::tfmode mode = function_parameters::_FUNCTION_ENTER)
     {
         for(unsigned int i=0; i < count; i++)
             add(function, mode);
     }
 
-    /** 
+    /**
      * \brief start registering
      * this function have no body (sic), inform system where registering begin
-     */    
-    void start_registering() {}    
+     */
+    void start_registering() {}
 
-    /** 
+    /**
      * \brief end registering
      * this function have no body (sic), inform system where registering end
-     */    
+     */
     void end_registering() {}
 
-    /** 
+    /**
      * \brief ensure order is correct
      * @param mode registering mode (registergin begin or end of functions)
      * throw failure exception on order is now correct
@@ -247,15 +247,15 @@ public:
         	    {
 	        	    if( expBegin == expEnd )
 		                showExp = false;
-		    
+		
             		if( gotBegin == gotEnd )
 	    	            showGot = false;
-	    
+	
             		if( showExp == false && showGot == false )
 		                break;
             		else
 	    	            ss << "\n";
-	    
+	
             		ss << "\t\t\t";
 
                     exp = "";
@@ -304,7 +304,7 @@ public:
             	    	    ss << " [0x" << *gotBegin << "]";
 
             		if( showExp )
-    		            expBegin++; 
+    		            expBegin++;
 		
             		if( showGot )
                     {
@@ -334,7 +334,7 @@ public:
         }
 
         if( isCorrect == false )
-       	    throw failure(ss.str().c_str());            
+       	    throw failure(ss.str().c_str());
     }
 
     void set_show_mode(tshow_mode showMode)
@@ -359,7 +359,7 @@ public:
             {
                 ss << "\n[" << i << "] -> begin functions" << std::endl;
                 ss << "--------------------------" << std::endl;
-    
+
                 nr = 1;
                 for(std::vector<void *>::iterator io = (*it)->__expected_functions_ptrs_on_enter.begin(); io < (*it)->__expected_functions_ptrs_on_enter.end(); io++, nr++)
                 {
@@ -399,15 +399,15 @@ public:
 
         return ss.str();
     }
-
-    static void ensure_functions_order(functions_order *functions, function_parameters::tfmode mode = function_parameters::_FUNCTION_ENTER)
-    {
-        functions->ensure_order(mode);
-    }
-
 };
 
-/**  
+static void ensure_functions_order(functions_order *functions, function_parameters::tfmode mode = function_parameters::_FUNCTION_ENTER)
+{
+    functions->ensure_order(mode);
+}
+
+
+/**
  * \brief Keep functions new body (Function wrapper)
  * @author Krzysztof Jusiak
  * @date 03/02/2009
@@ -507,11 +507,11 @@ class functions_body
         void *originalPtr;                                  ///original pointer
         void *newPtr;                                       ///new pointer
         unsigned int times;                                 ///how many times change body
-                
-    public:            
+
+    public:
         set_function(void *originalPtr, void *newPtr, unsigned int times) : originalPtr(originalPtr), newPtr(newPtr), times(times) {}
         set_function() : originalPtr(NULL), newPtr(NULL), times(0x00) {}
-            
+
         void *get_original_ptr(){ return originalPtr; }
         void *get_new_ptr(){ return newPtr; }
         void init(void *originalPtr, void *newPtr, unsigned int times)
@@ -531,7 +531,7 @@ public:
         functions_body::__set_functions.clear();
     }
 
-    /** 
+    /**
      * \brief set new body of function
      * this function set new function body, if was earlier set new body than will be executed last definied body
      * @param originalFunction pointer to function which body you want change
@@ -550,7 +550,7 @@ public:
         functions_body::__set_functions.push_back( new set_function(originalFunction, newFunction, times) );
     }
 
-    /** 
+    /**
      * \brief unset new function body
      * this function cause that orignalFunction will be have normal body
      * @param originalFunction pointer to function which body you want change
@@ -589,7 +589,7 @@ public:
         return ss.str();
     }
 
-    /** 
+    /**
      * \brief have new body
      * this function check if for this function was declared new body
      * @param originalFunction pointer to function which body you want change
@@ -604,7 +604,7 @@ public:
         return NULL;
     }
 
-    /** 
+    /**
      * \brief function was run in system
      * this function check if originalFunction wa run in system
      * if yes then check if times of change function body is not 0 and can run next time normal body
@@ -621,7 +621,7 @@ public:
     }
 };
 
-/**  
+/**
  * \brief Keep many functions orders
  * @author Krzysztof Jusiak
  * @date 03/02/2009
@@ -660,7 +660,7 @@ public:
             delete order;
     }
 
-    /** 
+    /**
      * \brief register function
      * this function is exececuted by __register_function and add register got function
      * @param function executed function
