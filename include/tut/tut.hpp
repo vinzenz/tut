@@ -11,10 +11,7 @@
 #include <algorithm>
 #include <typeinfo>
 
-#if !defined(TUT_USE_POSIX) && defined(linux)
-#define TUT_USE_POSIX
-#endif
-
+#include "tut_config.hpp"
 #include "tut_exception.hpp"
 #include "tut_result.hpp"
 #include "tut_posix.hpp"
@@ -372,7 +369,7 @@ public:
 				case SEH_OK:
 					// ok
 					break;
-            }            
+            }
         }
         catch (const rethrown& ex)
         {
@@ -456,7 +453,7 @@ public:
         }
         __except(handle_seh_(::GetExceptionCode()))
         {
-			return SEH_CTOR;            
+			return SEH_CTOR;
         }
 #endif
         return SEH_OK;

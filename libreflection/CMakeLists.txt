@@ -8,7 +8,7 @@ ELSE(${CMAKE_CXX_SIZEOF_DATA_PTR} EQUAL 8)
 MESSAGE(FATAL_ERROR "Unknown architecture!")
 ENDIF(${CMAKE_CXX_SIZEOF_DATA_PTR} EQUAL 4)
 
-MESSAGE(STATUS "Configuring for ${CMAKE_SYSTEM_ARCH}")
+MESSAGE(STATUS "Reflection architecture: ${CMAKE_SYSTEM_ARCH}")
 
 FILE(GLOB reflection_FILES "*.cpp")
 FILE(GLOB reflection_arch_FILES "arch/${CMAKE_SYSTEM_ARCH}/*.cpp")

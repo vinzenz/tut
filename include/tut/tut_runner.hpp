@@ -4,8 +4,11 @@
 #include <string>
 #include <vector>
 #include <set>
+#include "tut.hpp"
+
+#if defined(TUT_USE_FUNCTIONS)
 #include <tut/tut_reflection.hpp>
-#include <tut/tut_exception.hpp>
+#endif
 
 namespace tut
 {

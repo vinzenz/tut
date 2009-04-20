@@ -10,7 +10,7 @@
 #ifndef TUT_XML_REPORTER
 #define TUT_XML_REPORTER
 
-#include <tut/tut.hpp>
+#include "tut.hpp"
 #include <string>
 #include <fstream>
 #include <vector>
