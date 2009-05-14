@@ -2,6 +2,7 @@
 #define TUT_RESULT_H_GUARD
 
 #include <string>
+#include <typeinfo>
 
 namespace tut
 {

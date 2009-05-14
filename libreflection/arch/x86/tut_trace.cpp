@@ -66,7 +66,7 @@ static bool __new_body_tackle_return = false;           ///if true then on funct
 static int *__new_body_tackle_return_value;             ///use to keep what function return (not float and double, they use coprocessor for that)
 static void *__tmp_run = NULL;                          ///temporaray var to call new body
 static bool __is_run = false;                           ///temporaray var to call new body
-static double __double;                                 ///use to get float, double return value
+double __double = 0;                             ///use to get float, double return value
 static timespec __function_run_time;                    ///function executed time
 
 
@@ -319,7 +319,7 @@ void __cyg_profile_func_exit(void *this_fn, void *call_site)
                     if( method->getReturnType() == _TYPE_FLOAT || method->getReturnType() == _TYPE_DOUBLE )
                         func_parameters->add_parameter( method->getReturnType(), reinterpret_cast<void *>(&__double) );
                     else
-                        func_parameters->add_parameter(method->getReturnType(), (int *)&parameters_ptr, _UNKNOWN_SIZE);
+                        func_parameters->add_parameter( method->getReturnType(), (int *)&parameters_ptr, _UNKNOWN_SIZE);
                 }
                 else
                     func_parameters->add_parameter(method->getReturnType(), parameters_ptr, _UNKNOWN_SIZE);

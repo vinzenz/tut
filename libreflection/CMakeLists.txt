@@ -16,8 +16,9 @@ FILE(GLOB reflection_arch_FILES "arch/${CMAKE_SYSTEM_ARCH}/*.cpp")
 ADD_LIBRARY(reflection STATIC ${reflection_FILES} ${reflection_arch_FILES})
 
 ## shared lib does not work - PIC code places restrictions on inline asm
-# ADD_LIBRARY(libreflection STATIC ${libreflection_FILES} ${libreflection_arch_FILES})
+# ADD_LIBRARY(libreflection DYNAMIC ${libreflection_FILES} ${libreflection_arch_FILES})
 
+INCLUDE_DIRECTORIES(./include ${CMAKE_SOURCE_DIR}/include)
 FILE(GLOB reflection_HEADERS "include/reflection/*.h")
 INSTALL(FILES ${reflection_HEADERS} DESTINATION "include/reflection")
 INSTALL(TARGETS reflection

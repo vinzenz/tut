@@ -55,8 +55,7 @@ ELSE(TUT_USE_SEH)
     MESSAGE(STATUS "SEH support: disabled")
 ENDIF(TUT_USE_SEH)
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/tut_config.in
-${CMAKE_CURRENT_BINARY_DIR}/include/tut/tut_config.hpp)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/tut_config.in ${CMAKE_CURRENT_BINARY_DIR}/include/tut/tut_config.hpp)
 
 INCLUDE_DIRECTORIES(./include ./libreflection/include)
 

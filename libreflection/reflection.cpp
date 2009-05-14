@@ -1,8 +1,10 @@
-#include <stdio.h>
 #include <fcntl.h>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include <reflection/reflection.h>
 #include <cxxabi.h>

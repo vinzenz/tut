@@ -11,9 +11,9 @@ FILE(GLOB reflect_FILES  "reflect/*.cpp")
 FILE(GLOB functions_FILES   "functions/*.cpp")
 
 #ADD_EXECUTABLE(plugins     ${plugins_FILES})
-LINK_LIBRARIES(reflect rt)
+LINK_LIBRARIES(reflection rt)
 
-ADD_EXECUTABLE(ex_reflect ${reflection_FILES})
+ADD_EXECUTABLE(ex_reflect ${reflect_FILES})
 set_property(TARGET ex_reflect PROPERTY COMPILE_FLAGS
              "-finstrument-functions -g")
 
