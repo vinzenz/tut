@@ -1,0 +1,29 @@
+TASKS
+    1. minimal dwarf_unwind to c++
+    2. get function paramters automaticly from dwarf information
+
+WORKING
+    1. unwind to prev stack frame -> unw_resume 
+    2. unwind on many platforms -> libunwind
+    3. function parameters -> by hand ;) -> elf+dwarf
+
+NOT WORKING
+    3. getting result -> dwarf (to be done -> it's possible and shouldn't be very hard)
+
+PROBLEMS
+    1. if parameters were be extracted then run function with this parameters still will be problem without using asm and push etc.
+        e.g.
+            func(1,3,2);
+
+        cyg_enter...
+            get_dwarf_parameters -> 1,3,2
+            stub_function_pointer
+
+    solution:
+        1. templates with call(...) function
+        2. templates with parameters for e.g 1-15 (what whan function have 100 paramters ^:
+        3. table with pointers and some class to run function with parameters saved in table
+        4. other solutions
+        5. bullitin (gcc) -> have some possibilities
+
+        -> this for sure can be done without using asm :]
