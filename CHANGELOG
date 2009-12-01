@@ -1,0 +1,7 @@
+2009-12-01
+    Required dependencies for function extension
+        - ctags         http://ctags.sourceforge.net/
+        - elfutils      https://fedorahosted.org/elfutils/
+        - libunwind     http://www.nongnu.org/libunwind/
+        - gcc           http://gcc.gnu.org/
+
