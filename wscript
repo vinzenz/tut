@@ -1,4 +1,3 @@
-
 APPNAME='tut'
 VERSION='trunk'
 srcdir = ''
