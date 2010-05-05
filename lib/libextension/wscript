@@ -1,0 +1,65 @@
+APPNAME= 'libextension'
+VERSION= '0.1'
+srcdir = '.'
+blddir = 'build'
+
+import Options
+import Utils
+import glob
+import os
+
+def set_options(opt):
+    gr = opt.add_option_group('build options')
+    gr.add_option('--debug',      action='store_true', help='Build debug variant', default=False)
+    gr.add_option('--test',       action='store_true', help='Run self-tests after the build (off by default)', default=False)
+    gr.add_option('--coverage',   action='store_true', help='Produce test coverage report (off by default, implies --debug and --test)', default=False)
+    gr.add_option('--memcheck',   action='store_true', help='Produce test memcheck report (off by default, implies --debug and --test)', default=False)
+
+def configure(conf):
+    if Options.options.coverage:
+        Options.options.debug = True
+
+    conf.check_tool('g++')
+    conf.env.CPPFLAGS = [ '-g', '-Wall', '-pedantic', '-std=c++0x' ]
+
+    if Options.options.debug:
+        conf.env.set_variant('debug')
+        conf.env.CPPFLAGS += [ '-O0', '-g', '-static' ]
+
+def test(bld):
+    if Options.options.coverage:
+        cmd = os.path.join(bld.bdir, bld.env.variant(), 'libextension_test')
+        Utils.exec_command('LD_LIBRARY_PATH=../libcppreflection:' + os.path.join(bld.bdir, bld.env.variant()) + ' ' + "bcov " + cmd)
+        try:os.makedirs('bcovreport')
+        except:pass
+        Utils.exec_command("bcov-report .bcovdump bcovreport")
+    else:
+        if Options.options.test:
+            cmd = os.path.join(bld.bdir, bld.env.variant(), 'libextension_test')
+            Utils.exec_command('LD_LIBRARY_PATH=../libcppreflection:' + os.path.join(bld.bdir, bld.env.variant()) + ' ' + cmd)
+        else:
+            if Options.options.memcheck:
+                cmd = os.path.join(bld.bdir, bld.env.variant(), 'libextension_test')
+                Utils.exec_command('LD_LIBRARY_PATH=../libcppreflection:' + os.path.join(bld.bdir, bld.env.variant()) + ' valgrind --tool=memcheck -q --gen-suppressions=no --error-limit=no --num-callers=15 --leak-check=yes --leak-resolution=high --demangle=yes -v ' + cmd)
+
+def build(bld):
+    libextension = bld.new_task_gen(
+            features='cxx cshlib',
+            source='ext_global_extension.cpp ext_manager.cpp',
+            includes='include ../../include ../libcppreflection/include',
+            target='extension'
+    )
+
+    libextension_test = bld.new_task_gen(
+            features='cxx cprogram',
+            source = glob.glob('selftest/*.cpp'),
+            uselib_local = 'extension',
+            uselib = 'libcppreflection',
+            includes='include ../../include ../libcppreflection/include selftest',
+            target='libextension_test'
+    )
+    libextension_test.libpath = os.path.join(bld.bdir, '../../libcppreflection')
+    libextension_test.lib = 'cppreflection'
+
+    bld.add_post_fun(test)
+

@@ -1,0 +1,104 @@
+#!/bin/bash
+
+#check if is ctags
+
+#CFLAGS="-nostdinc -nostdinc++ - "
+CFLAGS=" - "
+CPP="g++ -E"
+CTAGS="ctags --language-force=C++ --c++-kinds=+p-d-e-g-l-t-u-v-x --fields=-a-f-m-i-k+K-l+n+s-S-t-z --filter=yes"
+DEFAULT_DIR=.
+
+#CTAGS test.cpp | awk '{print $1}'
+
+usage()
+{
+	echo "Usage: $0 [options] [files/dirs]"
+	echo "Options:"
+	echo "  --stubs		Generate stubs"
+    echo "  --update    Update generated testcases and stubs"
+	echo "  --help		Display this information"
+}
+
+reg_exp_1()
+{
+    if [[ $1 =~ $2 ]]; then
+        echo ${BASH_REMATCH[1]}
+    fi
+}
+
+file=$1
+tests_dir=tests
+
+mkdir -p $tests_dir/stubs 2>/dev/null
+tmp_dir=`mktemp -d /tmp/tutgen.XXXXXXXX`
+
+file_name=$(reg_exp_1 "$file" ".*/(.*)");
+
+#do preprocessor work in separte directory because of includes dir dependienses
+#run preprocessor(omit comments, also some functions can be defined by macros :/), this file will be also useful for creating testcases
+#grep -v -G "^#include.*" $file \
+cat $file \
+| $CPP $CFLAGS 2>/dev/null \
+| grep -v -G "^#.*" > $tmp_dir/$file_name
+
+#run ctags
+echo $tmp_dir/$file_name | $CTAGS > $tmp_dir/$file_name.ctags
+
+#generate stubs (-Isrc_directory for compilation should be given)
+stub_prefix=$tests_dir/stubs/tut_stub_${file_name/./_}_
+echo "#include \"$file\"" >$stub_prefix`ls $stub_prefix* 2>/dev/null | wc -l`.cpp
+
+#rm -rf $tmp_dir
+exit;
+while read line
+do
+    #if [[ "${line:0:1}" != "#" ]]; then
+        echo $line # >> $ctags_tmp_file
+            #fi
+        done < $
+
+#ctags --language-force=C++ --c++-kinds=+p --extra=+q -x $ctags_tmp_file
+#| awk '{print $1}'
+exit;
+
+
+#make example -> generate tutgen.sh in current directory
+
+for tmp in $@; do
+    case "$tmp" in
+        --help) usage;;
+        --stubs*)
+
+            if [[ $(reg_exp_1 "$tmp" ".*=(.*)") != "" ]]; then
+                echo hej
+            fi
+        ;;
+
+        --tc-per-class*);;
+
+        --tc-per-function*);;
+
+        --tc-per-file*);;
+
+        --tc-name*);;
+
+        --tc-comment*);;
+
+        --preprocessor-options*);;
+
+        --update);;
+
+        *);;
+    esac
+done
+
+# file_name=$(reg_exp_1 "$file" ".*/(.*)");
+
+
+cat $file > $tmp_dir/$file_name && $CPP $CFLAGS $tmp_dir/$file_name 2>/dev/null | while line=`line`
+do
+#    if [[ "${line:0:1}" != "#" ]]; then
+        echo $line  >> /home/krzychoo/tutgen/test.txt
+
+#    fi
+done

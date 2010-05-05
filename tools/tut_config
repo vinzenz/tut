@@ -1,0 +1,1 @@
+echo -g -lftrace -lcppreflection -lextension -fno-inline -finstrument-functions -funwind-tables

@@ -1,0 +1,44 @@
+Requirements:
+	ctags.sourceforge.net
+
+Options:
+	-one testcases per class
+	-for every functions
+	-stubs (file -> tut_stubs.cpp)
+	-dir (for test)
+	-regular expressions to choose which functions for classes which for all functions
+	-path(diff) for structure
+	-if commentet tests
+	-update (if some changes were done)
+	-files(or recursive)	
+
+	diff -crB tut_runner.hpp tut_runner2.hpp > tut_runner.patch
+	#patch -p0 < tut.patch
+
+	g++ -nostdinc
+	g++ options ->parameter
+
+	better: tutgen.cfg instead of parameters
+
+stub for every file with the same include -> in dir tut_stubs
++ 1 file with includes
+
+1. parse file for includes
+2.
+
+!! include parse file
+
+for e.g. to main.h
+
+#include "..src/main.h"
+
+<<stub>>
+
+Problem:
+
+    g++ -o main.hpp -I/bla/other/direcotory
+
+
+Problem:
+    Return value ??
+
