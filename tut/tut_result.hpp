@@ -3,6 +3,10 @@
 
 #include <string>
 
+#if defined(TUT_USE_POSIX)
+#   include <unistd.h>
+#endif
+
 namespace tut
 {
 
