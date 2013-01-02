@@ -11,7 +11,11 @@
 #endif
 
 #if defined(TUT_USE_RTTI)
-#include <typeinfo>
+#   include <typeinfo>
+#endif
+
+#if defined(TUT_USE_POSIX)
+#   include <unistd.h>
 #endif
 
 namespace tut
